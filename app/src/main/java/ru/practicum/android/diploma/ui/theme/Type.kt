@@ -12,8 +12,6 @@ val DiplomaFontFamily = FontFamily(
     Font(R.font.ys_display_medium, FontWeight.Medium),
     Font(R.font.ys_display_regular, FontWeight.Normal)
 )
-
-
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = DiplomaFontFamily,
@@ -43,5 +41,4 @@ val Typography = Typography(
         lineHeight = LineHeightSmall,
         letterSpacing = LetterSpacing
     )
-
 )
