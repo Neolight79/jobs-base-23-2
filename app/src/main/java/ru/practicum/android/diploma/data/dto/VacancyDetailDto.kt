@@ -29,7 +29,7 @@ data class AddressDto (
     val city: String?,
     val street: String?,
     val building: String?,
-    val fullAddress: String?,
+    val raw: String?,
 )
 
 data class ExperienceDto (
@@ -56,7 +56,7 @@ data class ContactsDto (
 
 data class PhoneDto (
     val comment: String?,
-    val formatted: String
+    val formatted: String?
 )
 
 data class EmployerDto (
