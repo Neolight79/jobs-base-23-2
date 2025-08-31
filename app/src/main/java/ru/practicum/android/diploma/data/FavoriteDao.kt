@@ -8,7 +8,6 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.data.dto.VacancyFavoriteEntity
 
-
 @Dao
 interface FavoriteDao {
 

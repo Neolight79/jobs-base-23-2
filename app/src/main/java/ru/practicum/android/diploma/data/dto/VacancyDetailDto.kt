@@ -17,14 +17,14 @@ data class VacancyDetailDto(
     val industry: IndustryDto?,
 )
 
-data class SalaryDto (
+data class SalaryDto(
     val id: String,
     val from: Int?,
     val to: Int?,
     val currency: String?
 )
 
-data class AddressDto (
+data class AddressDto(
     val id: String,
     val city: String?,
     val street: String?,
@@ -32,34 +32,34 @@ data class AddressDto (
     val raw: String?,
 )
 
-data class ExperienceDto (
+data class ExperienceDto(
     val id: String,
     val name: String?,
 )
 
-data class ScheduleDto (
+data class ScheduleDto(
     val id: String,
     val name: String?
 )
 
-data class EmploymentDto (
+data class EmploymentDto(
     val id: String,
     val name: String?
 )
 
-data class ContactsDto (
+data class ContactsDto(
     val id: String,
     val name: String?,
     val email: String?,
     val phones: List<PhoneDto>?
 )
 
-data class PhoneDto (
+data class PhoneDto(
     val comment: String?,
     val formatted: String?
 )
 
-data class EmployerDto (
+data class EmployerDto(
     val id: String,
     val name: String?,
     val logo: String?,

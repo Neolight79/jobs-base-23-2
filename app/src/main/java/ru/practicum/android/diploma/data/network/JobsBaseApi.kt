@@ -11,15 +11,15 @@ import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
 interface JobsBaseApi {
 
     @GET("/vacancies")
-    suspend fun getVacancies(@QueryMap options: Map<String, String>) : VacanciesResponse
+    suspend fun getVacancies(@QueryMap options: Map<String, String>): VacanciesResponse
 
     @GET("/vacancies/{id}")
-    suspend fun getVacancyById(@Path("id") vacancyId: String?) : VacancyDetailResponse
+    suspend fun getVacancyById(@Path("id") vacancyId: String?): VacancyDetailResponse
 
     @GET("/areas")
-    suspend fun getAreas() : AreaResponse
+    suspend fun getAreas(): AreaResponse
 
     @GET("/industries")
-    suspend fun getIndustries() : IndustryResponse
+    suspend fun getIndustries(): IndustryResponse
 
 }

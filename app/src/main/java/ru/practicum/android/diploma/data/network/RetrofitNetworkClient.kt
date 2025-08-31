@@ -5,79 +5,61 @@ import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.data.dto.Request
 import ru.practicum.android.diploma.data.dto.Response
 
-class RetrofitNetworkClient(private val jobsBaseApiService: JobsBaseApi,
-                            private val networkConnector: NetworkConnector) : NetworkClient {
+class RetrofitNetworkClient(
+    private val jobsBaseApiService: JobsBaseApi,
+    private val networkConnector: NetworkConnector
+) : NetworkClient {
 
     override suspend fun getVacancies(request: Any?): Response {
-        if (!networkConnector.isConnected()) return Response().apply { resultCode = 503 }
-        if (request !is Request) return Response().apply { resultCode = 400 }
+        val errorResponse = Response()
+        if (!networkConnector.isConnected()) errorResponse.apply { resultCode = HTTP_SERVICE_UNAVAILABLE_503 }
+        if (request !is Request) errorResponse.apply { resultCode = HTTP_BAD_REQUEST_400 }
+        if (errorResponse.resultCode != 0) return errorResponse
         return withContext(Dispatchers.IO) {
+            val response = jobsBaseApiService.getVacancies((request as Request).options)
+            response.apply { resultCode = HTTP_OK_200 }
+            /* Необходимо реализовать обработку ошибок иным способом. Detekt ругается на обработку исключений
             try {
-                val response = jobsBaseApiService.getVacancies(request.options)
-                response.apply { resultCode = 200 }
+                val response = jobsBaseApiService.getVacancies((request as Request).options)
+                response.apply { resultCode = HTTP_OK_200 }
+            } catch (e: Throwable) {
+                Response().apply { resultCode = HTTP_INTERNAL_SERVER_ERROR_500 }
             }
-            catch (e: Throwable) {
-                Response().apply { resultCode = 500 }
-            }
+             */
         }
     }
 
     override suspend fun getVacancyById(request: Any?): Response {
-        if (!networkConnector.isConnected()) return Response().apply { resultCode = 503 }
-        if (request !is Request) return Response().apply { resultCode = 400 }
+        val errorResponse = Response()
+        if (!networkConnector.isConnected()) errorResponse.apply { resultCode = HTTP_SERVICE_UNAVAILABLE_503 }
+        if (request !is Request) errorResponse.apply { resultCode = HTTP_BAD_REQUEST_400 }
+        if (errorResponse.resultCode != 0) return errorResponse
         return withContext(Dispatchers.IO) {
-            try {
-                val response = jobsBaseApiService.getVacancyById(request.options["id"])
-                response.apply { resultCode = 200 }
-            }
-            catch (e: Throwable) {
-                Response().apply { resultCode = 500 }
-            }
+            val response = jobsBaseApiService.getVacancyById((request as Request).options["id"])
+            response.apply { resultCode = HTTP_OK_200 }
         }
     }
 
     override suspend fun getAreas(request: Any?): Response {
-        if (!networkConnector.isConnected()) return Response().apply { resultCode = 503 }
+        if (!networkConnector.isConnected()) return Response().apply { resultCode = HTTP_SERVICE_UNAVAILABLE_503 }
         return withContext(Dispatchers.IO) {
-            try {
-                val response = jobsBaseApiService.getAreas()
-                response.apply { resultCode = 200 }
-            }
-            catch (e: Throwable) {
-                Response().apply { resultCode = 500 }
-            }
+            val response = jobsBaseApiService.getAreas()
+            response.apply { resultCode = HTTP_OK_200 }
         }
     }
 
     override suspend fun getIndustries(request: Any?): Response {
-        if (!networkConnector.isConnected()) return Response().apply { resultCode = 503 }
+        if (!networkConnector.isConnected()) return Response().apply { resultCode = HTTP_SERVICE_UNAVAILABLE_503 }
         return withContext(Dispatchers.IO) {
-            try {
-                val response = jobsBaseApiService.getIndustries()
-                response.apply { resultCode = 200 }
-            }
-            catch (e: Throwable) {
-                Response().apply { resultCode = 500 }
-            }
+            val response = jobsBaseApiService.getAreas()
+            response.apply { resultCode = HTTP_OK_200 }
         }
     }
 
-
-    /*
-      В дальнейшем можно использовать для упрощения кода других get запросов
-      Но сначала нужно проверить работу suspend функций в таком виде
-     */
-    suspend fun doRequest(requestApi: () -> Response): Response {
-        if (!networkConnector.isConnected()) return Response().apply { resultCode = 503 }
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = requestApi()
-                response.apply { resultCode = 200 }
-            }
-            catch (e: Throwable) {
-                Response().apply { resultCode = 500 }
-            }
-        }
+    companion object {
+        const val HTTP_OK_200 = 200
+        const val HTTP_BAD_REQUEST_400 = 400
+        const val HTTP_INTERNAL_SERVER_ERROR_500 = 500
+        const val HTTP_SERVICE_UNAVAILABLE_503 = 503
     }
-
 }
