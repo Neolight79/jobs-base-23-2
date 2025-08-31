@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Practicum-Android-Diploma</string>
+    <string name="screen_main">Главная</string>
+    <string name="screen_favorites">Избранное</string>
+    <string name="screen_team">Команда</string>
+</resources>
