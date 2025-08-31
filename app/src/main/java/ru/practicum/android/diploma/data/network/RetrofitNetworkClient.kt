@@ -11,48 +11,73 @@ class RetrofitNetworkClient(
 ) : NetworkClient {
 
     override suspend fun getVacancies(request: Any?): Response {
-        val errorResponse = Response()
-        if (!networkConnector.isConnected()) errorResponse.apply { resultCode = HTTP_SERVICE_UNAVAILABLE_503 }
-        if (request !is Request) errorResponse.apply { resultCode = HTTP_BAD_REQUEST_400 }
-        if (errorResponse.resultCode != 0) return errorResponse
+        val errorResponse = checkRequest(request)
+        if (errorResponse != null) return errorResponse
         return withContext(Dispatchers.IO) {
-            val response = jobsBaseApiService.getVacancies((request as Request).options)
-            response.apply { resultCode = HTTP_OK_200 }
-            /* Необходимо реализовать обработку ошибок иным способом. Detekt ругается на обработку исключений
-            try {
-                val response = jobsBaseApiService.getVacancies((request as Request).options)
-                response.apply { resultCode = HTTP_OK_200 }
-            } catch (e: Throwable) {
+            val response = runCatching {
+                jobsBaseApiService.getVacancies((request as Request).options)
+            }
+            if (response.isSuccess && response.getOrNull() != null) {
+                response.getOrThrow().apply { resultCode = HTTP_OK_200 }
+            } else {
                 Response().apply { resultCode = HTTP_INTERNAL_SERVER_ERROR_500 }
             }
-             */
         }
     }
 
     override suspend fun getVacancyById(request: Any?): Response {
-        val errorResponse = Response()
-        if (!networkConnector.isConnected()) errorResponse.apply { resultCode = HTTP_SERVICE_UNAVAILABLE_503 }
-        if (request !is Request) errorResponse.apply { resultCode = HTTP_BAD_REQUEST_400 }
-        if (errorResponse.resultCode != 0) return errorResponse
+        val errorResponse = checkRequest(request)
+        if (errorResponse != null) return errorResponse
         return withContext(Dispatchers.IO) {
-            val response = jobsBaseApiService.getVacancyById((request as Request).options["id"])
-            response.apply { resultCode = HTTP_OK_200 }
+            val response = runCatching {
+                jobsBaseApiService.getVacancyById((request as Request).options["id"])
+            }
+            if (response.isSuccess && response.getOrNull() != null) {
+                response.getOrThrow().apply { resultCode = HTTP_OK_200 }
+            } else {
+                Response().apply { resultCode = HTTP_INTERNAL_SERVER_ERROR_500 }
+            }
         }
     }
 
     override suspend fun getAreas(request: Any?): Response {
-        if (!networkConnector.isConnected()) return Response().apply { resultCode = HTTP_SERVICE_UNAVAILABLE_503 }
+        val errorResponse = checkRequest(request)
+        if (errorResponse != null) return errorResponse
         return withContext(Dispatchers.IO) {
-            val response = jobsBaseApiService.getAreas()
-            response.apply { resultCode = HTTP_OK_200 }
+            val response = runCatching {
+                jobsBaseApiService.getAreas()
+            }
+            if (response.isSuccess && response.getOrNull() != null) {
+                response.getOrThrow().apply { resultCode = HTTP_OK_200 }
+            } else {
+                Response().apply { resultCode = HTTP_INTERNAL_SERVER_ERROR_500 }
+            }
         }
     }
 
     override suspend fun getIndustries(request: Any?): Response {
-        if (!networkConnector.isConnected()) return Response().apply { resultCode = HTTP_SERVICE_UNAVAILABLE_503 }
+        val errorResponse = checkRequest(request)
+        if (errorResponse != null) return errorResponse
         return withContext(Dispatchers.IO) {
-            val response = jobsBaseApiService.getAreas()
-            response.apply { resultCode = HTTP_OK_200 }
+            val response = runCatching {
+                jobsBaseApiService.getIndustries()
+            }
+            if (response.isSuccess && response.getOrNull() != null) {
+                response.getOrThrow().apply { resultCode = HTTP_OK_200 }
+            } else {
+                Response().apply { resultCode = HTTP_INTERNAL_SERVER_ERROR_500 }
+            }
+        }
+    }
+
+    private fun checkRequest(request: Any?): Response? {
+        val response = Response()
+        if (!networkConnector.isConnected()) response.apply { resultCode = HTTP_SERVICE_UNAVAILABLE_503 }
+        if (request != null && request !is Request) response.apply { resultCode = HTTP_BAD_REQUEST_400 }
+        return if (response.resultCode == 0) {
+            null
+        } else {
+            response
         }
     }
 
