@@ -62,4 +62,22 @@ class RetrofitNetworkClient(private val jobsBaseApiService: JobsBaseApi,
         }
     }
 
+
+    /*
+      В дальнейшем можно использовать для упрощения кода других get запросов
+      Но сначала нужно проверить работу suspend функций в таком виде
+     */
+    suspend fun doRequest(requestApi: () -> Response): Response {
+        if (!networkConnector.isConnected()) return Response().apply { resultCode = 503 }
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = requestApi()
+                response.apply { resultCode = 200 }
+            }
+            catch (e: Throwable) {
+                Response().apply { resultCode = 500 }
+            }
+        }
+    }
+
 }

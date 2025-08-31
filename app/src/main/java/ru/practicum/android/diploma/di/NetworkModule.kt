@@ -2,10 +2,16 @@ package ru.practicum.android.diploma.di
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
+import ru.practicum.android.diploma.data.network.JobsBaseApi
+import ru.practicum.android.diploma.data.network.NetworkClient
+import ru.practicum.android.diploma.data.network.NetworkConnector
+import ru.practicum.android.diploma.data.network.NetworkConnectorImpl
+import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 
 val networkModule = module {
 
@@ -36,6 +42,15 @@ val networkModule = module {
             .client(get())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+            .create(JobsBaseApi::class.java)
+    }
+
+    single<NetworkConnector> {
+        NetworkConnectorImpl(androidContext())
+    }
+
+    single<NetworkClient> {
+        RetrofitNetworkClient(get(), get())
     }
 
 }
