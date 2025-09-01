@@ -82,8 +82,9 @@ fun NavScreen() {
 
     val bottomNavRoutes = BottomNavRoutes.entries.map { it.name }
     val showBottomBar = remember { mutableStateOf(true) }
-    showBottomBar.value = navController.currentBackStackEntryAsState().value?.destination?.route in bottomNavRoutes
-        || navController.currentBackStackEntryAsState().value?.destination?.route.isNullOrEmpty()
+    showBottomBar.value =
+        navController.currentBackStackEntryAsState().value?.destination?.route in bottomNavRoutes
+            || navController.currentBackStackEntryAsState().value?.destination?.route.isNullOrEmpty()
 
     Scaffold(
         bottomBar = {
