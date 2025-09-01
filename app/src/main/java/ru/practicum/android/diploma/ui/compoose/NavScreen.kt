@@ -55,7 +55,7 @@ const val ROUTE_FILTER_INDUSTRY = "searchFilterIndustry"
 
 const val JOB_ID = "jobID"
 
-const val ANIMATION_DELAY = 300
+const val ANIMATION_DELAY = 500
 const val ZERO_DELAY = 0
 
 @Composable
