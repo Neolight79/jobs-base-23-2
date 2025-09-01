@@ -14,7 +14,6 @@ import ru.practicum.android.diploma.data.SharedStorage
 private const val SHARED_PREFERENCES_FILE_NAME = "favorites_shared_preferences"
 private const val DB_NAME = "database.db"
 
-
 val dataModule = module {
 
     factory<Gson> { Gson() }
@@ -24,8 +23,7 @@ val dataModule = module {
     }
 
     single {
-        Room.databaseBuilder(androidContext(), AppDatabase::class.java, DB_NAME)
-            .build()
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, DB_NAME).build()
     }
 
     single<SharedPreferences> {
@@ -35,5 +33,4 @@ val dataModule = module {
     single<SharedStorage> {
         FilterParametersSharedStorageImpl(get(), get())
     }
-
 }
