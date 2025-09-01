@@ -1,21 +1,18 @@
 package ru.practicum.android.diploma.ui.activity
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import ru.practicum.android.diploma.BuildConfig
-import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.ui.compoose.NavScreen
+import ru.practicum.android.diploma.ui.theme.DiplomaAppTheme
 
 class RootActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_root)
-
-        // Пример использования access token для HeadHunter API
-        networkRequestExample(accessToken = BuildConfig.API_ACCESS_TOKEN)
+        setContent {
+            DiplomaAppTheme {
+                NavScreen()
+            }
+        }
     }
-
-    private fun networkRequestExample(accessToken: String) {
-        // ...
-    }
-
 }

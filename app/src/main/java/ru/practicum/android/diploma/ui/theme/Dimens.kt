@@ -15,3 +15,6 @@ val LetterSpacing = 0.sp
 val CornerRadius = 12.dp
 val PaddingBase = 16.dp
 val PaddingSmall = 8.dp
+val SpacerThin = 1.dp
+val BottomBarHeight = 72.dp
+val ZeroSize = 0.dp

@@ -11,7 +11,7 @@ val DiplomaFontFamily = FontFamily(
     Font(R.font.ys_display_bold, FontWeight.Bold),
     Font(R.font.ys_display_medium, FontWeight.Medium),
     Font(R.font.ys_display_regular, FontWeight.Normal),
-    Font(R.font.roboto_regular, weight = FontWeight.Light)
+    Font(R.font.roboto_regular, FontWeight.Light)
 )
 val Typography = Typography(
     bodyLarge = TextStyle(
@@ -37,7 +37,7 @@ val Typography = Typography(
     ),
     titleSmall = TextStyle(
         fontFamily = DiplomaFontFamily,
-        fontWeight = FontWeight.Light,
+        fontWeight = FontWeight.Normal,
         fontSize = FontSizeSmall,
         lineHeight = LineHeightSmall,
         letterSpacing = LetterSpacing
