@@ -16,7 +16,6 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,7 +28,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.delay
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.models.BottomBarItem
 import ru.practicum.android.diploma.domain.models.BottomNavRoutes
@@ -58,6 +56,7 @@ const val ROUTE_FILTER_INDUSTRY = "searchFilterIndustry"
 const val JOB_ID = "jobID"
 
 const val ANIMATION_DELAY = 300
+const val ZERO_DELAY = 0
 
 @Composable
 fun NavScreen() {
@@ -83,16 +82,8 @@ fun NavScreen() {
 
     val bottomNavRoutes = BottomNavRoutes.entries.map { it.name }
     val showBottomBar = remember { mutableStateOf(true) }
-    val isBottomBarDestination =
-        navController.currentBackStackEntryAsState().value?.destination?.route in bottomNavRoutes
-            || navController.currentBackStackEntryAsState().value?.destination?.route.isNullOrEmpty()
-
-    // Если BottomBar должен появиться, то добавляем задержку в 300мс, чтобы не было конфликта с
-    // версткой исчезающих экранов
-    LaunchedEffect(isBottomBarDestination) {
-        if (isBottomBarDestination) delay(ANIMATION_DELAY.toLong())
-        showBottomBar.value = isBottomBarDestination
-    }
+    showBottomBar.value = navController.currentBackStackEntryAsState().value?.destination?.route in bottomNavRoutes
+        || navController.currentBackStackEntryAsState().value?.destination?.route.isNullOrEmpty()
 
     Scaffold(
         bottomBar = {
@@ -104,7 +95,7 @@ fun NavScreen() {
                 ),
                 exit = slideOutVertically(
                     targetOffsetY = { it },
-                    animationSpec = tween(durationMillis = ANIMATION_DELAY)
+                    animationSpec = tween(durationMillis = ZERO_DELAY)
                 )
             ) {
                 Column {
