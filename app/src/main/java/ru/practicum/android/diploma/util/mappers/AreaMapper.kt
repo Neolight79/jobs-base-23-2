@@ -6,11 +6,25 @@ import ru.practicum.android.diploma.domain.models.Area
 class AreaMapper {
 
     fun map(area: Area) : AreaDto {
-        TODO("Not yet implemented")
+        return AreaDto(
+            id = area.id,
+            name = area.name,
+            parentId = area.parentId,
+            areas = area.areas?.map {
+                map(it)
+            }
+        )
     }
 
     fun map(area: AreaDto) : Area {
-        TODO("Not yet implemented")
+        return Area(
+            id = area.id,
+            name = area.name,
+            parentId = area.parentId,
+            areas = area.areas?.map {
+                map(it)
+            }
+        )
     }
 
 }

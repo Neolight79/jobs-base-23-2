@@ -6,11 +6,17 @@ import ru.practicum.android.diploma.domain.models.Industry
 class IndustryMapper {
 
     fun map(industry: Industry) : IndustryDto {
-        TODO("Not yet implemented")
+        return IndustryDto(
+            id = industry.id,
+            name = industry.name
+        )
     }
 
-    fun map(area: IndustryDto) : Industry {
-        TODO("Not yet implemented")
+    fun map(industryDto: IndustryDto) : Industry {
+        return Industry(
+            id = industryDto.id,
+            name = industryDto.name
+        )
     }
 
 }
