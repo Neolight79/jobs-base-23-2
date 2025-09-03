@@ -22,9 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.TeamMember
+import ru.practicum.android.diploma.ui.theme.ArrowBackHeight
+import ru.practicum.android.diploma.ui.theme.ArrowBackTouchTarget
+import ru.practicum.android.diploma.ui.theme.PaddingBase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,20 +48,20 @@ fun TeamScreen(
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(start = 16.dp)
+                        modifier = Modifier.padding(start = PaddingBase)
                     )
                 },
                 navigationIcon = {
                     IconButton(
                         onClick = { onBackClick() },
                         modifier = Modifier
-                            .size(48.dp)
-                            .padding(start = 16.dp)
+                            .size(ArrowBackTouchTarget)
+                            .padding(start = PaddingBase)
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.arrow_back),
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(ArrowBackHeight)
                         )
                     }
                 }

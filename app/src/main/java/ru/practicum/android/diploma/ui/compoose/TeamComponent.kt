@@ -22,10 +22,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.TeamMember
+import ru.practicum.android.diploma.ui.theme.InitialImageSize
 import ru.practicum.android.diploma.ui.theme.PaddingSmall
+import ru.practicum.android.diploma.ui.theme.SpacerThinFour
+import ru.practicum.android.diploma.ui.theme.SpacerThinTwo
+
 @Composable
 fun TeamComponent(teamMember: TeamMember) {
     Row(
@@ -41,7 +44,7 @@ fun TeamComponent(teamMember: TeamMember) {
             Image(
                 painter = painterResource(id = teamMember.imageRes),
                 contentDescription = null,
-                modifier = Modifier.size(80.dp)
+                modifier = Modifier.size(InitialImageSize)
             )
         } else {
             RoundInitials(getInitials(teamMember))
@@ -60,7 +63,7 @@ fun TeamComponent(teamMember: TeamMember) {
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1
                 )
-                Spacer(Modifier.width(4.dp))
+                Spacer(Modifier.width(SpacerThinFour))
                 Text(
                     text = teamMember.name,
                     style = MaterialTheme.typography.titleMedium,
@@ -69,12 +72,12 @@ fun TeamComponent(teamMember: TeamMember) {
                     maxLines = 1
                 )
             }
-            Spacer(Modifier.width(2.dp))
+            Spacer(Modifier.width(SpacerThinTwo))
             InfoRow(
                 label = stringResource(R.string.сurrent_job),
                 value = teamMember.currentJob ?: "—"
             )
-            Spacer(Modifier.width(2.dp))
+            Spacer(Modifier.width(SpacerThinTwo))
             InfoRow(
                 label = stringResource(R.string.github_name),
                 value = teamMember.githubName ?: "—"
@@ -87,8 +90,8 @@ fun TeamComponent(teamMember: TeamMember) {
 fun RoundInitials(initials: String) {
     Box(
         modifier = Modifier
-            .size(80.dp)
-            .padding(vertical = 8.dp),
+            .size(InitialImageSize)
+            .padding(vertical = PaddingSmall),
         contentAlignment = Alignment.Center
     ) {
         Icon(
