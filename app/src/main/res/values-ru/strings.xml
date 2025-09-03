@@ -6,4 +6,5 @@
     <string name="screen_team">Команда</string>
     <string name="сurrent_job">Должность</string>
     <string name="github_name">Никнейм на GitHub</string>
+    <string name="arrow_back">Назад</string>
 </resources>

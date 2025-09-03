@@ -5,4 +5,5 @@
     <string name="screen_team">Team</string>
     <string name="сurrent_job">Job position</string>
     <string name="github_name">GitHub nickname</string>
+    <string name="arrow_back">Back</string>
 </resources>

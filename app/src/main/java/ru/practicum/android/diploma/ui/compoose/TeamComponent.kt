@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.TeamMember
-import ru.practicum.android.diploma.ui.theme.PaddingBase
 import ru.practicum.android.diploma.ui.theme.PaddingSmall
 @Composable
 fun TeamComponent(teamMember: TeamMember) {
@@ -34,7 +33,7 @@ fun TeamComponent(teamMember: TeamMember) {
             .fillMaxWidth()
             .padding(
                 vertical = PaddingSmall,
-                horizontal = PaddingBase
+                horizontal = PaddingSmall
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -80,7 +79,6 @@ fun TeamComponent(teamMember: TeamMember) {
                 label = stringResource(R.string.github_name),
                 value = teamMember.githubName ?: "—"
             )
-            Spacer(Modifier.width(2.dp))
         }
     }
 
@@ -99,7 +97,11 @@ fun RoundInitials(initials: String) {
             tint = MaterialTheme.colorScheme.surfaceVariant,
             modifier = Modifier.fillMaxSize()
         )
-        Text(text = initials)
+        Text(
+            text = initials,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }
 @Composable
@@ -112,14 +114,14 @@ fun InfoRow(label: String, value: String) {
             text = "$label:",
             modifier = Modifier
                 .weight(1f),
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Start
 
         )
         Text(
             text = value,
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2
