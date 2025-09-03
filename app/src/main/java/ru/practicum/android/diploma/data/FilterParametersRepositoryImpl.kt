@@ -16,7 +16,7 @@ class FilterParametersRepositoryImpl(
 
     override fun getFilterParameters(): FilterParameters {
         val filterParametersDto = sharedStorage.getData(
-            FilterParametersDto(null, null, null , false)
+            FilterParametersDto(null, null, null, false)
         ) as FilterParametersDto
         return filterParametersMapper.map(filterParametersDto)
     }

@@ -8,7 +8,7 @@ class FilterParametersMapper(
     private val industryMapper: IndustryMapper
 ) {
 
-    fun map(filterParameters: FilterParameters) : FilterParametersDto {
+    fun map(filterParameters: FilterParameters): FilterParametersDto {
         return FilterParametersDto(
             area = filterParameters.area?.let { area -> areaMapper.map(area) },
             industry = filterParameters.industry?.let { industry -> industryMapper.map(industry) },
@@ -17,7 +17,7 @@ class FilterParametersMapper(
         )
     }
 
-    fun map(filterParametersDto: FilterParametersDto) : FilterParameters {
+    fun map(filterParametersDto: FilterParametersDto): FilterParameters {
         return FilterParameters(
             area = filterParametersDto.area?.let { area -> areaMapper.map(area) },
             industry = filterParametersDto.industry?.let { industry -> industryMapper.map(industry) },
