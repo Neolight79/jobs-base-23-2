@@ -18,3 +18,4 @@ val PaddingSmall = 8.dp
 val SpacerThin = 1.dp
 val BottomBarHeight = 72.dp
 val ZeroSize = 0.dp
+val MediumBlockHeight = 61.dp

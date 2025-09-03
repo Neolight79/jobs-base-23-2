@@ -4,4 +4,6 @@
     <string name="screen_main">Главная</string>
     <string name="screen_favorites">Избранное</string>
     <string name="screen_team">Команда</string>
+    <string name="сurrent_job">Должность</string>
+    <string name="github_name">Никнейм на GitHub</string>
 </resources>
