@@ -22,14 +22,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.TeamMember
 import ru.practicum.android.diploma.ui.theme.PaddingBase
 import ru.practicum.android.diploma.ui.theme.PaddingSmall
-
-
 @Composable
 fun TeamComponent(teamMember: TeamMember) {
     Row(
@@ -88,7 +85,6 @@ fun TeamComponent(teamMember: TeamMember) {
     }
 
 }
-
 @Composable
 fun RoundInitials(initials: String) {
     Box(
@@ -106,7 +102,6 @@ fun RoundInitials(initials: String) {
         Text(text = initials)
     }
 }
-
 @Composable
 fun InfoRow(label: String, value: String) {
     Row(
@@ -131,22 +126,8 @@ fun InfoRow(label: String, value: String) {
         )
     }
 }
-
 fun getInitials(teamMember: TeamMember): String {
     val nameInitial = teamMember.name.firstOrNull()?.uppercaseChar()
     val familyInitial = teamMember.surname.firstOrNull()?.uppercaseChar()
     return listOfNotNull(nameInitial, familyInitial).joinToString("")
-}
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun Preview_WithImage() {
-    val teamMember = TeamMember(
-        name = "Имя",
-        surname = "Фамилия",
-        currentJob = "Андроид разработчик",
-        githubName = "Megatron",
-        imageRes = null,
-    )
-    TeamComponent(teamMember = teamMember)
 }

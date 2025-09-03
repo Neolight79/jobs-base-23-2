@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import ru.practicum.android.diploma.data.TeamMember
+import ru.practicum.android.diploma.ui.theme.PaddingBase
 
 @Composable
 fun TeamScreen(
@@ -24,14 +24,44 @@ fun TeamScreen(
             TestTitle("Экран\nКОМАНДА")
             TeamComponent(
                 teamMember = TeamMember(
-                    name = "Имя",
-                    surname = "Фамилия",
+                    name = "Владислав",
+                    surname = "Сергеев",
                     currentJob = "Андроид разработчик",
-                    githubName = "Megatron",
+                    githubName = "Vladismann",
                     imageRes = null,
                 )
             )
-            Spacer(Modifier.width(2.dp))
+            Spacer(Modifier.width(PaddingBase))
+            TeamComponent(
+                teamMember = TeamMember(
+                    name = "Сергей",
+                    surname = "Кулешов",
+                    currentJob = "Андроид разработчик",
+                    githubName = "Neolight79",
+                    imageRes = null,
+                )
+            )
+            Spacer(Modifier.width(PaddingBase))
+            TeamComponent(
+                teamMember = TeamMember(
+                    name = "Евгений",
+                    surname = "Колосов",
+                    currentJob = "Андроид разработчик",
+                    githubName = "owenear",
+                    imageRes = null,
+                )
+            )
+            Spacer(Modifier.width(PaddingBase))
+            TeamComponent(
+                teamMember = TeamMember(
+                    name = "Елена",
+                    surname = "Пупышева",
+                    currentJob = "Андроид разработчик",
+                    githubName = "ElenaPupysheva",
+                    imageRes = null,
+                )
+            )
+            Spacer(Modifier.width(PaddingBase))
             TestButton("Назад") {
                 onBackClick()
             }
