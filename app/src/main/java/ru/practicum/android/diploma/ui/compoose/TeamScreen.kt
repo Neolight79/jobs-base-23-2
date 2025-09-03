@@ -81,7 +81,7 @@ fun TeamScreen(
                     teamMember = TeamMember(
                         name = "Владислав",
                         surname = "Сергеев",
-                        currentJob = "Андроид разработчик",
+                        currentJob = stringResource(R.string.android_developer),
                         githubName = "Vladismann",
                         imageRes = null,
                     )
@@ -90,7 +90,7 @@ fun TeamScreen(
                     teamMember = TeamMember(
                         name = "Сергей",
                         surname = "Кулешов",
-                        currentJob = "Андроид разработчик",
+                        currentJob = stringResource(R.string.android_developer),
                         githubName = "Neolight79",
                         imageRes = null,
                     )
@@ -99,7 +99,7 @@ fun TeamScreen(
                     teamMember = TeamMember(
                         name = "Евгений",
                         surname = "Колосов",
-                        currentJob = "Андроид разработчик",
+                        currentJob = stringResource(R.string.android_developer),
                         githubName = "owenear",
                         imageRes = null,
                     )
@@ -108,7 +108,7 @@ fun TeamScreen(
                     teamMember = TeamMember(
                         name = "Елена",
                         surname = "Пупышева",
-                        currentJob = "к.т.н., Андроид разработчик",
+                        currentJob = stringResource(R.string.android_developer),
                         githubName = "ElenaPupysheva",
                         imageRes = null,
                     )
