@@ -19,6 +19,6 @@ fun NavGraphBuilder.teamScreenNavigation(navController: NavHostController) {
             slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIMATION_DELAY))
         }
     ) {
-        TeamScreen(navController = navController)
+        TeamScreen(onBackClick = { navController.navigateUp() })
     }
 }
