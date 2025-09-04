@@ -3,4 +3,8 @@
     <string name="screen_main">Main</string>
     <string name="screen_favorites">Favorites</string>
     <string name="screen_team">Team</string>
+    <string name="сurrent_job">Job position</string>
+    <string name="android_developer">Android developer</string>
+    <string name="github_name">GitHub nickname</string>
+    <string name="arrow_back">Back</string>
 </resources>
