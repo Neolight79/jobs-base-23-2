@@ -16,8 +16,3 @@ data class Vacancy(
     val url: String,
     val industry: FilterIndustry,
 )
-
-
-
-
-
