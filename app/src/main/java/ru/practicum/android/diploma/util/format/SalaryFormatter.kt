@@ -11,6 +11,7 @@ object SalaryFormatter {
         "RUR" to "RUB"
     )
 
+    @Suppress("ComplexMethod")
     fun toDisplay(
         minValue: Long?,
         maxValue: Long?,
@@ -29,15 +30,18 @@ object SalaryFormatter {
             maximumFractionDigits = 0
             isGroupingUsed = true
         }
-        fun fmt(v: Long?) = v?.let { nf.format(it) }
+        fun fmt(v: Long?) = v
+            ?.let { nf.format(it) }
             ?.let { if (keepNbsp) it.replace(' ', '\u00A0') else it }
 
         val min = fmt(minValue)
         val max = fmt(maxValue)
 
-        val label =
-            if (currencyStyle == CurrencyStyle.CODE) code
-            else runCatching { Currency.getInstance(code).getSymbol(locale) }.getOrNull() ?: code
+        val label = if (currencyStyle == CurrencyStyle.CODE) {
+            code
+        } else {
+            runCatching { Currency.getInstance(code).getSymbol(locale) }.getOrNull() ?: code
+        }
 
         return when {
             min != null && max != null -> "от $min до $max $label"
