@@ -10,9 +10,9 @@ import org.koin.dsl.module
 import ru.practicum.android.diploma.data.AppDatabase
 import ru.practicum.android.diploma.data.FilterParametersSharedStorageImpl
 import ru.practicum.android.diploma.data.SharedStorage
-import ru.practicum.android.diploma.util.mappers.AreaMapper
+import ru.practicum.android.diploma.util.mappers.FilterAreaMapper
 import ru.practicum.android.diploma.util.mappers.FilterParametersMapper
-import ru.practicum.android.diploma.util.mappers.IndustryMapper
+import ru.practicum.android.diploma.util.mappers.FilterIndustryMapper
 
 private const val SHARED_PREFERENCES_FILE_NAME = "favorites_shared_preferences"
 private const val DB_NAME = "database.db"
@@ -40,11 +40,11 @@ val dataModule = module {
     }
 
     single {
-        AreaMapper()
+        FilterAreaMapper()
     }
 
     single {
-        IndustryMapper()
+        FilterIndustryMapper()
     }
 
     single {

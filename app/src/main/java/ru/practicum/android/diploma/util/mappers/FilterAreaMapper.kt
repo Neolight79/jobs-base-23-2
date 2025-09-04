@@ -1,12 +1,12 @@
 package ru.practicum.android.diploma.util.mappers
 
-import ru.practicum.android.diploma.data.dto.AreaDto
-import ru.practicum.android.diploma.domain.models.Area
+import ru.practicum.android.diploma.data.dto.FilterAreaDto
+import ru.practicum.android.diploma.domain.models.FilterArea
 
-class AreaMapper {
+class FilterAreaMapper {
 
-    fun map(area: Area): AreaDto {
-        return AreaDto(
+    fun map(area: FilterArea): FilterAreaDto {
+        return FilterAreaDto(
             id = area.id,
             name = area.name,
             parentId = area.parentId,
@@ -16,8 +16,8 @@ class AreaMapper {
         )
     }
 
-    fun map(area: AreaDto): Area {
-        return Area(
+    fun map(area: FilterAreaDto): FilterArea {
+        return FilterArea(
             id = area.id,
             name = area.name,
             parentId = area.parentId,

@@ -4,14 +4,14 @@ import ru.practicum.android.diploma.data.dto.FilterParametersDto
 import ru.practicum.android.diploma.domain.models.FilterParameters
 
 class FilterParametersMapper(
-    private val areaMapper: AreaMapper,
-    private val industryMapper: IndustryMapper
+    private val filterAreaMapper: FilterAreaMapper,
+    private val filterIndustryMapper: FilterIndustryMapper
 ) {
 
     fun map(filterParameters: FilterParameters): FilterParametersDto {
         return FilterParametersDto(
-            area = filterParameters.area?.let { area -> areaMapper.map(area) },
-            industry = filterParameters.industry?.let { industry -> industryMapper.map(industry) },
+            area = filterParameters.area?.let { area -> filterAreaMapper.map(area) },
+            industry = filterParameters.industry?.let { industry -> filterIndustryMapper.map(industry) },
             salary = filterParameters.salary,
             onlyWithSalary = filterParameters.onlyWithSalary,
         )
@@ -19,8 +19,8 @@ class FilterParametersMapper(
 
     fun map(filterParametersDto: FilterParametersDto): FilterParameters {
         return FilterParameters(
-            area = filterParametersDto.area?.let { area -> areaMapper.map(area) },
-            industry = filterParametersDto.industry?.let { industry -> industryMapper.map(industry) },
+            area = filterParametersDto.area?.let { area -> filterAreaMapper.map(area) },
+            industry = filterParametersDto.industry?.let { industry -> filterIndustryMapper.map(industry) },
             salary = filterParametersDto.salary,
             onlyWithSalary = filterParametersDto.onlyWithSalary,
         )
