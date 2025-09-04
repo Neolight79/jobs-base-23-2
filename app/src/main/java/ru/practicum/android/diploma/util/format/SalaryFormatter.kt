@@ -24,29 +24,25 @@ object SalaryFormatter {
 
         val codeUpper = currencyCodeRaw?.uppercase(Locale.ROOT).orEmpty()
         val code = (normalizedCode[codeUpper] ?: codeUpper).ifEmpty { "RUB" }
+
         val nf = NumberFormat.getNumberInstance(locale).apply {
             maximumFractionDigits = 0
             isGroupingUsed = true
         }
-
         fun fmt(v: Long?) = v?.let { nf.format(it) }
             ?.let { if (keepNbsp) it.replace(' ', '\u00A0') else it }
 
         val min = fmt(minValue)
         val max = fmt(maxValue)
 
-        val label = when (currencyStyle) {
-            CurrencyStyle.CODE -> code
-            CurrencyStyle.SYMBOL, CurrencyStyle.SYMBOL_OR_CODE -> runCatching {
-                Currency.getInstance(code).symbol
-            }.getOrNull() ?: code
-        }
+        val label =
+            if (currencyStyle == CurrencyStyle.CODE) code
+            else runCatching { Currency.getInstance(code).getSymbol(locale) }.getOrNull() ?: code
 
         return when {
             min != null && max != null -> "от $min до $max $label"
             min != null -> "от $min $label"
-            max != null -> "до $max $label"
-            else -> emptyText
+            else -> "до $max $label"
         }
     }
 }
