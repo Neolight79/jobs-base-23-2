@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.domain.impl
 import ru.practicum.android.diploma.data.dto.Request
 import ru.practicum.android.diploma.data.dto.VacanciesResponse
 import ru.practicum.android.diploma.data.network.NetworkClient
+import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_OK_200
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.util.mappers.VacancyMapper
@@ -24,8 +25,6 @@ class VacanciesInteractorImpl(
         onlyWithSalary: Boolean,
         page: Int
     ): List<Vacancy> {
-        if (isLoading || currentPage >= totalPages) return emptyList()
-
         isLoading = true
         try {
             val requestOptions = mutableMapOf<String, String>()
@@ -39,7 +38,7 @@ class VacanciesInteractorImpl(
             val request = Request(options = requestOptions)
             val response = networkClient.getVacancies(request)
 
-            if (response.resultCode == 200 && response is VacanciesResponse) {
+            if (response.resultCode == HTTP_OK_200 && response is VacanciesResponse) {
                 totalPages = response.pages
                 currentPage = response.page
                 return response.items.map { vacancyMapper.map(it) }

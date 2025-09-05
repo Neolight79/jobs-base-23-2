@@ -26,7 +26,6 @@ class VacancyMapper(
     private val filterIndustryMapper: FilterIndustryMapper
 ) {
 
-
     fun map(dto: VacancyDetailDto): Vacancy {
         return Vacancy(
             id = dto.id,
