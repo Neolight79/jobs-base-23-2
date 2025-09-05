@@ -1,7 +1,8 @@
 package ru.practicum.android.diploma.domain.models
 
 data class Salary(
-    val min: Long?,
-    val max: Long?,
-    val currency: String
+    val id: String,
+    val currency: String,
+    val from: Int?,
+    val to: Int?
 )
