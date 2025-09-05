@@ -13,6 +13,7 @@ import ru.practicum.android.diploma.data.SharedStorage
 import ru.practicum.android.diploma.util.mappers.FilterAreaMapper
 import ru.practicum.android.diploma.util.mappers.FilterParametersMapper
 import ru.practicum.android.diploma.util.mappers.FilterIndustryMapper
+import ru.practicum.android.diploma.util.mappers.VacancyMapper
 
 private const val SHARED_PREFERENCES_FILE_NAME = "favorites_shared_preferences"
 private const val DB_NAME = "database.db"
@@ -49,6 +50,13 @@ val dataModule = module {
 
     single {
         FilterParametersMapper(get(), get())
+    }
+
+    single {
+        VacancyMapper(
+            filterAreaMapper = get(),
+            filterIndustryMapper = get()
+        )
     }
 
 }
