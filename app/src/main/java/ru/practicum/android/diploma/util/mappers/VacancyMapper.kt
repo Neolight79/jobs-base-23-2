@@ -26,94 +26,62 @@ class VacancyMapper(
     private val filterIndustryMapper: FilterIndustryMapper
 ) {
 
-    fun map(dto: VacancyDetailDto): Vacancy {
-        return Vacancy(
-            id = dto.id,
-            name = dto.name.orEmpty(),
-            description = dto.description.orEmpty(),
-            salary = dto.salary?.let { mapSalary(it) } ?: Salary("", "", null, null),
-            address = dto.address?.let { mapAddress(it) }
-                ?: Address("", "", "", "", ""),
-            experience = dto.experience?.let { mapExperience(it) }
-                ?: Experience("", ""),
-            schedule = dto.schedule?.let { mapSchedule(it) }
-                ?: Schedule("", ""),
-            employment = dto.employment?.let { mapEmployment(it) }
-                ?: Employment("", ""),
-            contacts = dto.contacts?.let { mapContacts(it) }
-                ?: Contacts("", "", "", emptyList()),
-            employer = dto.employer?.let { mapEmployer(it) }
-                ?: Employer("", "", ""),
-            area = dto.area?.let { filterAreaMapper.map(it) }
-                ?: FilterArea(0, "", null, emptyList()),
-            skills = dto.skills ?: emptyList(),
-            url = dto.url.orEmpty(),
-            industry = dto.industry?.let { filterIndustryMapper.map(it) }
-                ?: FilterIndustry(0, "")
-        )
-    }
+    fun map(dto: VacancyDetailDto): Vacancy = Vacancy(
+        id = dto.id,
+        name = dto.name.orEmpty(),
+        description = dto.description.orEmpty(),
+        salary = dto.salary.toDomain(),
+        address = dto.address.toDomain(),
+        experience = dto.experience.toDomain(),
+        schedule = dto.schedule.toDomain(),
+        employment = dto.employment.toDomain(),
+        contacts = dto.contacts.toDomain(),
+        employer = dto.employer.toDomain(),
+        area = dto.area?.let { filterAreaMapper.map(it) } ?: FilterArea(0, "", null, emptyList()),
+        skills = dto.skills.orEmpty(),
+        url = dto.url.orEmpty(),
+        industry = dto.industry?.let { filterIndustryMapper.map(it) } ?: FilterIndustry(0, "")
+    )
 
-    private fun mapSalary(dto: SalaryDto): Salary {
-        return Salary(
-            id = dto.id,
-            currency = dto.currency ?: "",
-            from = dto.from,
-            to = dto.to
-        )
-    }
+    private fun SalaryDto?.toDomain(): Salary = this?.let {
+        Salary(id = it.id, currency = it.currency ?: "", from = it.from, to = it.to)
+    } ?: Salary("", "", null, null)
 
-    private fun mapAddress(dto: AddressDto): Address {
-        return Address(
-            id = dto.id,
-            city = dto.city ?: "",
-            street = dto.street ?: "",
-            building = dto.building ?: "",
-            fullAddress = dto.raw ?: ""
+    private fun AddressDto?.toDomain(): Address = this?.let {
+        Address(
+            id = it.id,
+            city = it.city.orEmpty(),
+            street = it.street.orEmpty(),
+            building = it.building.orEmpty(),
+            fullAddress = it.raw.orEmpty()
         )
-    }
+    } ?: Address("", "", "", "", "")
 
-    private fun mapExperience(dto: ExperienceDto): Experience {
-        return Experience(
-            id = dto.id,
-            name = dto.name ?: ""
-        )
-    }
+    private fun ExperienceDto?.toDomain(): Experience = this?.let {
+        Experience(id = it.id, name = it.name.orEmpty())
+    } ?: Experience("", "")
 
-    private fun mapSchedule(dto: ScheduleDto): Schedule {
-        return Schedule(
-            id = dto.id,
-            name = dto.name ?: ""
-        )
-    }
+    private fun ScheduleDto?.toDomain(): Schedule = this?.let {
+        Schedule(id = it.id, name = it.name.orEmpty())
+    } ?: Schedule("", "")
 
-    private fun mapEmployment(dto: EmploymentDto): Employment {
-        return Employment(
-            id = dto.id,
-            name = dto.name ?: ""
-        )
-    }
+    private fun EmploymentDto?.toDomain(): Employment = this?.let {
+        Employment(id = it.id, name = it.name.orEmpty())
+    } ?: Employment("", "")
 
-    private fun mapContacts(dto: ContactsDto): Contacts {
-        return Contacts(
-            id = dto.id,
-            name = dto.name ?: "",
-            email = dto.email ?: "",
-            phones = dto.phones?.map { mapPhone(it) } ?: emptyList()
-        )
-    }
+    private fun ContactsDto?.toDomain(): Contacts = this?.let {
+        Contacts(
+            id = it.id,
+            name = it.name.orEmpty(),
+            email = it.email.orEmpty(),
+            phones = it.phones.orEmpty().map { it.toDomain() })
+    } ?: Contacts("", "", "", emptyList())
 
-    private fun mapPhone(dto: PhoneDto): Phone {
-        return Phone(
-            comment = dto.comment,
-            formatted = dto.formatted ?: ""
-        )
-    }
+    private fun PhoneDto?.toDomain(): Phone = this?.let {
+        Phone(comment = it.comment, formatted = it.formatted.orEmpty())
+    } ?: Phone(null, "")
 
-    private fun mapEmployer(dto: EmployerDto): Employer {
-        return Employer(
-            id = dto.id,
-            name = dto.name ?: "",
-            logoUrl = dto.logo ?: ""
-        )
-    }
+    private fun EmployerDto?.toDomain(): Employer = this?.let {
+        Employer(id = it.id, name = it.name.orEmpty(), logoUrl = it.logo.orEmpty())
+    } ?: Employer("", "", "")
 }
