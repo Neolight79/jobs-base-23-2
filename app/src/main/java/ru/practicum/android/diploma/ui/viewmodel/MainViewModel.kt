@@ -11,15 +11,21 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.data.network.NetworkClient
+import ru.practicum.android.diploma.domain.api.VacanciesInteractor
+import ru.practicum.android.diploma.domain.impl.VacanciesInteractorImpl
 import ru.practicum.android.diploma.domain.models.Contact
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
 import ru.practicum.android.diploma.domain.models.SearchState
 import ru.practicum.android.diploma.domain.models.VacanciesPage
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.util.debounce
+import ru.practicum.android.diploma.util.mappers.VacancyMapper
 import kotlin.random.Random
 
-class MainViewModel() : ViewModel() {
+class MainViewModel(networkClient: NetworkClient, vacancyMapper: VacancyMapper) : ViewModel() {
+
+    val interactor = VacanciesInteractorImpl(networkClient, vacancyMapper)
 
     // Моковый результат поиска ToDo удалить!
     val vacanciesSearchResultsList = List(Random.nextInt(80, 100)) { index ->
@@ -111,12 +117,35 @@ class MainViewModel() : ViewModel() {
             // Скрываем клавиатуру
             hideKeyboard()
 
+//            viewModelScope.launch {
+//                interactor.searchVacancies(
+//                    text = newSearchText,
+//                    onlyWithSalary = false,
+//                    page = currentPage
+//                ).collect { favoriteTracks ->
+//                    if (favoriteTracks.isEmpty())
+//                        renderState(FavoriteState.Empty)
+//                    else
+//                        renderState(FavoriteState.TracksFavorite(favoriteTracks))
+//                }
+//            }
+
             // ToDo запускаем в интеракторе функцию поиска вакансий
             // ToDo но до подключения интерактора будем использовать моковые методы в текущем классе
             viewModelScope.launch {
-                searchMockVacancies(newSearchText, currentPage + 1).collect { pair ->
-                    processResult(pair.first, pair.second)
+                try {
+                    val a = interactor.searchVacancies(
+                        text = newSearchText,
+                        onlyWithSalary = false,
+                        page = currentPage
+                    )
+                    val d = a
+                } catch (e: Exception) {
+                    val b = 0
                 }
+//                searchMockVacancies(newSearchText, currentPage + 1).collect { pair ->
+//                    processResult(pair.first, pair.second)
+//                }
             }
 
         } else {

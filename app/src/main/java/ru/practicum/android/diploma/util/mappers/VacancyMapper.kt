@@ -31,8 +31,8 @@ class VacancyMapper(
 
     private fun SalaryDto?.toDomain(): String = this?.let {
         var salaryString = ""
-        if (it.from != null) salaryString.plus("от ${DecimalFormat("# ###").format(it.from)} ")
-        if (it.to != null) salaryString.plus("до ${DecimalFormat("# ###").format(it.to)} ")
+        if (it.from != null) salaryString.plus("от ${DecimalFormat("#,###").format(it.from).replace(',', ' ')} ")
+        if (it.to != null) salaryString.plus("до ${DecimalFormat("#,###").format(it.to).replace(',', ' ')} ")
         if (salaryString.isNotEmpty()) {
             if (it.currency != null) salaryString.plus(getCurrencySymbol(it.currency))
         } else {
