@@ -40,7 +40,7 @@ class VacanciesInteractorImpl(
             val request = Request(options = requestOptions)
             val response = networkClient.getVacancies(request)
 
-            if (response.resultCode == HTTP_OK_200 && response is VacanciesResponse) {
+            return if (response.resultCode == HTTP_OK_200 && response is VacanciesResponse) {
                 totalPages = response.pages
                 currentPage = response.page
                 val currentPage = if (response.items.isEmpty()) {
@@ -53,11 +53,11 @@ class VacanciesInteractorImpl(
                     )
                 }
                 val currentStatus = SearchResultStatus.Success
-                return Pair(currentPage, currentStatus)
+                Pair(currentPage, currentStatus)
             } else if (response.resultCode == HTTP_SERVICE_UNAVAILABLE_503) {
-                return Pair(null, SearchResultStatus.NoConnection)
+                Pair(null, SearchResultStatus.NoConnection)
             } else {
-                return Pair(null, SearchResultStatus.ServerError)
+                Pair(null, SearchResultStatus.ServerError)
             }
         } finally {
             isLoading = false
@@ -69,4 +69,3 @@ class VacanciesInteractorImpl(
         totalPages = 1
     }
 }
-

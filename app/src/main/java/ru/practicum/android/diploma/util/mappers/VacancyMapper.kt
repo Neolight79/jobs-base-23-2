@@ -31,7 +31,8 @@ class VacancyMapper(
     )
 
     private fun SalaryDto?.toDomain(): String = this?.let {
-        @Suppress("DEPRECATION") val numberFormat = NumberFormat.getNumberInstance(Locale("ru"))
+        @Suppress("DEPRECATION")
+        val numberFormat = NumberFormat.getNumberInstance(Locale("ru"))
 
         var salaryString = ""
         if (it.from != null) salaryString += "от ${numberFormat.format(it.from)} "

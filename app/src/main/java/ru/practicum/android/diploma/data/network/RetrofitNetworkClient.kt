@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.data.network
 
-import android.R.id.message
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -24,7 +23,7 @@ class RetrofitNetworkClient(
             } else {
                 Response().apply {
                     resultCode = HTTP_INTERNAL_SERVER_ERROR_500
-                    Log.e("Error response", "Ошибка:=${message}")
+                    Log.e("Error response", "Ошибка:=$message")
                 }
             }
         }
