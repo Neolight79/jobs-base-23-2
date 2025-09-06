@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.util.mappers
 
-import android.icu.text.DecimalFormat
 import ru.practicum.android.diploma.data.dto.ContactsDto
 import ru.practicum.android.diploma.data.dto.SalaryDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailDto
@@ -32,7 +31,7 @@ class VacancyMapper(
     )
 
     private fun SalaryDto?.toDomain(): String = this?.let {
-        val numberFormat = NumberFormat.getNumberInstance(Locale("ru"))
+        @Suppress("DEPRECATION") val numberFormat = NumberFormat.getNumberInstance(Locale("ru"))
 
         var salaryString = ""
         if (it.from != null) salaryString += "от ${numberFormat.format(it.from)} "

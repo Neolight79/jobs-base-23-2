@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.domain.api
 
-import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.domain.models.SearchResultStatus
+import ru.practicum.android.diploma.domain.models.VacanciesPage
 
 interface VacanciesInteractor {
     suspend fun searchVacancies(
@@ -9,6 +10,6 @@ interface VacanciesInteractor {
         text: String? = null,
         salary: Int? = null,
         onlyWithSalary: Boolean = false,
-        page: Int = 0
-    ): List<Vacancy>
+        page: Int
+    ): Pair<VacanciesPage?, SearchResultStatus>
 }

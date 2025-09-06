@@ -4,8 +4,10 @@ import ru.practicum.android.diploma.data.dto.Request
 import ru.practicum.android.diploma.data.dto.VacanciesResponse
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_OK_200
+import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_SERVICE_UNAVAILABLE_503
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
-import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.domain.models.SearchResultStatus
+import ru.practicum.android.diploma.domain.models.VacanciesPage
 import ru.practicum.android.diploma.util.mappers.VacancyMapper
 
 class VacanciesInteractorImpl(
@@ -24,7 +26,7 @@ class VacanciesInteractorImpl(
         salary: Int?,
         onlyWithSalary: Boolean,
         page: Int
-    ): List<Vacancy> {
+    ): Pair<VacanciesPage?, SearchResultStatus> {
         isLoading = true
         try {
             val requestOptions = mutableMapOf<String, String>()
@@ -41,10 +43,22 @@ class VacanciesInteractorImpl(
             if (response.resultCode == HTTP_OK_200 && response is VacanciesResponse) {
                 totalPages = response.pages
                 currentPage = response.page
-                return response.items.map { vacancyMapper.map(it) }
+                val currentPage = if (response.items.isEmpty()) {
+                    null
+                } else {
+                    VacanciesPage(
+                        totalVacancies = response.found,
+                        pageNumber = page,
+                        vacancies = response.items.map { vacancyMapper.map(it) }
+                    )
+                }
+                val currentStatus = SearchResultStatus.Success
+                return Pair(currentPage, currentStatus)
+            } else if (response.resultCode == HTTP_SERVICE_UNAVAILABLE_503) {
+                return Pair(null, SearchResultStatus.NoConnection)
+            } else {
+                return Pair(null, SearchResultStatus.ServerError)
             }
-
-            return emptyList()
         } finally {
             isLoading = false
         }
