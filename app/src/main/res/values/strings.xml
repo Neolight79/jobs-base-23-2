@@ -3,4 +3,15 @@
     <string name="screen_main">Main</string>
     <string name="screen_favorites">Favorites</string>
     <string name="screen_team">Team</string>
+    <string name="title_search">Search jobs</string>
+    <string name="title_filters">Filter settings</string>
+    <string name="enter_request">Enter request</string>
+    <string name="no_connection">No connection</string>
+    <string name="server_error">Server error</string>
+    <string name="no_such_vacancies_found">No such vacancies found</string>
+    <string name="empty_search_result">Failed to get\nvacancies list</string>
+    <plurals name="numberOfVacancies">
+        <item quantity="one">Found %1$d vacancy</item>
+        <item quantity="other">Found %1$d vacancies</item>
+    </plurals>
 </resources>

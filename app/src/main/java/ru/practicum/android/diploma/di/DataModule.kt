@@ -14,7 +14,6 @@ import ru.practicum.android.diploma.data.SharedStorage
 private const val SHARED_PREFERENCES_FILE_NAME = "favorites_shared_preferences"
 private const val DB_NAME = "database.db"
 
-
 val dataModule = module {
 
     factory<Gson> { Gson() }
