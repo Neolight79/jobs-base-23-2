@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -11,21 +12,16 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
-import ru.practicum.android.diploma.domain.impl.VacanciesInteractorImpl
 import ru.practicum.android.diploma.domain.models.Contact
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
 import ru.practicum.android.diploma.domain.models.SearchState
 import ru.practicum.android.diploma.domain.models.VacanciesPage
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.util.debounce
-import ru.practicum.android.diploma.util.mappers.VacancyMapper
 import kotlin.random.Random
 
-class MainViewModel(networkClient: NetworkClient, vacancyMapper: VacancyMapper) : ViewModel() {
-
-    val interactor = VacanciesInteractorImpl(networkClient, vacancyMapper)
+class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : ViewModel() {
 
     // Моковый результат поиска ToDo удалить!
     val vacanciesSearchResultsList = List(Random.nextInt(80, 100)) { index ->
@@ -33,6 +29,27 @@ class MainViewModel(networkClient: NetworkClient, vacancyMapper: VacancyMapper) 
             employerName = index.plus(1).toString()
         )
     }
+
+    init {
+        loadVacancies()
+    }
+    fun loadVacancies() {
+        viewModelScope.launch {
+            val response = vacanciesInteractor.searchVacancies(
+                area = null,
+                industry = null,
+                text = "Data Analyst",
+                salary = null,
+                onlyWithSalary = false,
+                page = 1
+            )
+            vacancies.postValue(response)
+        }
+    }
+
+    val vacancies = MutableLiveData<List<Vacancy>>()
+
+
 
     // Общие переменные
     private var latestSearchText = ""
@@ -117,35 +134,12 @@ class MainViewModel(networkClient: NetworkClient, vacancyMapper: VacancyMapper) 
             // Скрываем клавиатуру
             hideKeyboard()
 
-//            viewModelScope.launch {
-//                interactor.searchVacancies(
-//                    text = newSearchText,
-//                    onlyWithSalary = false,
-//                    page = currentPage
-//                ).collect { favoriteTracks ->
-//                    if (favoriteTracks.isEmpty())
-//                        renderState(FavoriteState.Empty)
-//                    else
-//                        renderState(FavoriteState.TracksFavorite(favoriteTracks))
-//                }
-//            }
-
             // ToDo запускаем в интеракторе функцию поиска вакансий
             // ToDo но до подключения интерактора будем использовать моковые методы в текущем классе
             viewModelScope.launch {
-                try {
-                    val a = interactor.searchVacancies(
-                        text = newSearchText,
-                        onlyWithSalary = false,
-                        page = currentPage
-                    )
-                    val d = a
-                } catch (e: Exception) {
-                    val b = 0
+                searchMockVacancies(newSearchText, currentPage + 1).collect { pair ->
+                    processResult(pair.first, pair.second)
                 }
-//                searchMockVacancies(newSearchText, currentPage + 1).collect { pair ->
-//                    processResult(pair.first, pair.second)
-//                }
             }
 
         } else {

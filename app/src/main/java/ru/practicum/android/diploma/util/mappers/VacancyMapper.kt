@@ -6,6 +6,8 @@ import ru.practicum.android.diploma.data.dto.SalaryDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailDto
 import ru.practicum.android.diploma.domain.models.Contact
 import ru.practicum.android.diploma.domain.models.Vacancy
+import java.text.NumberFormat
+import java.util.Locale
 
 class VacancyMapper(
     private val filterAreaMapper: FilterAreaMapper,
@@ -30,14 +32,18 @@ class VacancyMapper(
     )
 
     private fun SalaryDto?.toDomain(): String = this?.let {
+        val numberFormat = NumberFormat.getNumberInstance(Locale("ru"))
+
         var salaryString = ""
-        if (it.from != null) salaryString.plus("от ${DecimalFormat("#,###").format(it.from).replace(',', ' ')} ")
-        if (it.to != null) salaryString.plus("до ${DecimalFormat("#,###").format(it.to).replace(',', ' ')} ")
+        if (it.from != null) salaryString += "от ${numberFormat.format(it.from)} "
+        if (it.to != null) salaryString += "до ${numberFormat.format(it.to)} "
+
         if (salaryString.isNotEmpty()) {
-            if (it.currency != null) salaryString.plus(getCurrencySymbol(it.currency))
+            if (!it.currency.isNullOrEmpty()) salaryString += getCurrencySymbol(it.currency)
         } else {
             salaryString = "Уровень зарплаты не указан"
         }
+
         salaryString
     } ?: ""
 
