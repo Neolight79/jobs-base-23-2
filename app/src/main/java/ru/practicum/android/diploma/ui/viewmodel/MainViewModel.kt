@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -8,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.api.FilterParametersInteractor
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
@@ -18,7 +20,8 @@ import ru.practicum.android.diploma.util.debounce
 
 class MainViewModel(
     private val vacanciesInteractor: VacanciesInteractor,
-    private val filterParametersInteractor: FilterParametersInteractor
+    private val filterParametersInteractor: FilterParametersInteractor,
+    private val application: Application
 ) : ViewModel() {
 
     // Общие переменные
@@ -137,15 +140,22 @@ class MainViewModel(
                 }
             }
         } else {
+            val context = application.applicationContext
             when (searchStatus) {
                 SearchResultStatus.Success -> {
                     if (foundVacancies == null) {
-                        renderState(provideEndOfList())
+                        renderState(provideEndOfList(context.getString(R.string.empty_search_result)))
                     } else {
                         renderState(provideVacancies(foundVacancies))
                     }
                 }
-                else -> renderState(provideEndOfList())
+                SearchResultStatus.NoConnection -> {
+                    renderState(provideEndOfList(context.getString(R.string.no_connection)))
+
+                }
+                SearchResultStatus.ServerError -> {
+                    renderState(provideEndOfList(context.getString(R.string.server_error)))
+                }
             }
         }
     }
@@ -163,9 +173,10 @@ class MainViewModel(
         )
     }
 
-    private fun provideEndOfList(): SearchState {
+    private fun provideEndOfList(errorMessage: String? = null): SearchState {
         return SearchState.VacanciesFound(
             isShowTrailingPlaceholder = false,
+            errorMessage = errorMessage,
             vacanciesQuantity = totalVacancies,
             vacanciesList = vacanciesList.toList()
         )

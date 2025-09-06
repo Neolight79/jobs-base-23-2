@@ -16,6 +16,7 @@ sealed interface SearchState {
 
     data class VacanciesFound(
         val isShowTrailingPlaceholder: Boolean,
+        val errorMessage: String? = null,
         val vacanciesQuantity: Int,
         val vacanciesList: List<Vacancy>
     ) : SearchState

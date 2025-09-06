@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.compoose
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -95,6 +96,8 @@ fun MainScreen(
     navController: NavController,
     viewModel: MainViewModel = koinViewModel<MainViewModel>()
 ) {
+    val context = LocalContext.current
+
     // Отслеживаем основной объект состояний экрана поиска вакансий
     val searchState = viewModel.searchState.collectAsState().value
 
@@ -169,6 +172,10 @@ fun MainScreen(
                         navController.navigate("$ROUTE_JOB_DETAILS/${vacancy.id}")
                     }
                 )
+                LaunchedEffect(searchState) {
+                    if (searchState.errorMessage != null)
+                        Toast.makeText(context, searchState.errorMessage, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
