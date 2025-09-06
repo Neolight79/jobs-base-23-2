@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.domain.api.VacanciesInteractor
 import ru.practicum.android.diploma.domain.models.Contact
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
 import ru.practicum.android.diploma.domain.models.SearchState
@@ -19,7 +21,7 @@ import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.util.debounce
 import kotlin.random.Random
 
-class MainViewModel() : ViewModel() {
+class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : ViewModel() {
 
     // Моковый результат поиска ToDo удалить!
     val vacanciesSearchResultsList = List(Random.nextInt(80, 100)) { index ->
@@ -27,6 +29,27 @@ class MainViewModel() : ViewModel() {
             employerName = index.plus(1).toString()
         )
     }
+
+    init {
+        loadVacancies()
+    }
+    fun loadVacancies() {
+        viewModelScope.launch {
+            val response = vacanciesInteractor.searchVacancies(
+                area = null,
+                industry = null,
+                text = "Data Analyst",
+                salary = null,
+                onlyWithSalary = false,
+                page = 1
+            )
+            vacancies.postValue(response)
+        }
+    }
+
+    val vacancies = MutableLiveData<List<Vacancy>>()
+
+
 
     // Общие переменные
     private var latestSearchText = ""
