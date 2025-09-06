@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.domain.api.FilterParametersInteractor
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
 import ru.practicum.android.diploma.domain.models.SearchState
@@ -15,7 +16,10 @@ import ru.practicum.android.diploma.domain.models.VacanciesPage
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.util.debounce
 
-class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : ViewModel() {
+class MainViewModel(
+    private val vacanciesInteractor: VacanciesInteractor,
+    private val filterParametersInteractor: FilterParametersInteractor
+) : ViewModel() {
 
     // Общие переменные
     private var latestSearchText = ""
@@ -84,6 +88,10 @@ class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : View
         viewModelScope.launch {
             _hideKeyboardState.emit(Unit)
         }
+    }
+
+    fun updateIsFiltersEnabled() {
+        _filtersEnabledState.value = filterParametersInteractor.isFilterEnabled()
     }
 
     // Приватные методы

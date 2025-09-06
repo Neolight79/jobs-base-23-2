@@ -51,6 +51,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
@@ -99,6 +100,12 @@ fun MainScreen(
 
     // Отслеживаем признак активных фильтров для поиска
     val filtersEnabled = viewModel.filtersEnabledState.collectAsState().value
+
+    // При возвращении на экран проверяем, возможно включились или выключились фильтры
+    LifecycleResumeEffect(Unit) {
+        viewModel.updateIsFiltersEnabled()
+        onPauseOrDispose { }
+    }
 
     // Формируем главную поверхность для макета экрана
     Column(
