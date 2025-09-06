@@ -360,7 +360,7 @@ fun VacanciesList(
             }
         }
         if (isShowTrailingPlaceholder) {
-            item() {
+            item {
                 ProgressbarListItem()
             }
         }
