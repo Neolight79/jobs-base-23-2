@@ -17,14 +17,12 @@ import ru.practicum.android.diploma.domain.models.SearchState
 import ru.practicum.android.diploma.domain.models.VacanciesPage
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.util.debounce
-import kotlin.collections.List
 import kotlin.random.Random
 
-class MainViewModel : ViewModel() {
+class MainViewModel() : ViewModel() {
 
     // Моковый результат поиска ToDo удалить!
     val vacanciesSearchResultsList = List(Random.nextInt(80, 100)) { index ->
-//        mockVacationsSourceList.random().copy()
         mockVacationsSourceList.random().copy(
             employerName = index.plus(1).toString()
         )
