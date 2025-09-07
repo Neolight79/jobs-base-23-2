@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
 import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.domain.models.VacancyState
 
 class JobDetailsViewModel(
     jobID: String,
@@ -22,15 +23,35 @@ class JobDetailsViewModel(
     private val _vacancyIdState = MutableStateFlow<String>(jobID)
     val vacancyIdState: StateFlow<String> = _vacancyIdState.asStateFlow()
 
+    private val _vacancyState = MutableStateFlow<VacancyState>(VacancyState.Loading)
+    val vacancyState: StateFlow<VacancyState> = _vacancyState.asStateFlow()
+
     fun getVacancyDetail(vacancyId: String) {
+        renderState(VacancyState.Loading)
         viewModelScope.launch {
             val response = vacanciesInteractor.getVacancyById(vacancyId)
             processResult(response.first, response.second)
         }
     }
 
-    private fun processResult(foundVacancy: Vacancy?, searchStatus: SearchResultStatus) {
-        val context = application.applicationContext
-        Log.d("MY DEBUG", foundVacancy.toString())
+
+    private fun processResult(vacancy: Vacancy?, searchStatus: SearchResultStatus) {
+        when (searchStatus) {
+            SearchResultStatus.Success -> {
+                if (vacancy == null) {
+                    renderState(VacancyState.EmptyResult)
+                } else {
+                    renderState(VacancyState.VacancyDetail(vacancy))
+                }
+            }
+            else -> renderState(VacancyState.ServerError)
+        }
+
+
     }
+
+    private fun renderState(state: VacancyState) {
+        _vacancyState.value = state
+    }
+
 }

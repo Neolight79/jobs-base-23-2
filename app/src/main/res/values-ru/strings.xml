@@ -16,6 +16,13 @@
     <string name="server_error">Ошибка сервера</string>
     <string name="no_such_vacancies_found">Таких вакансий нет</string>
     <string name="empty_search_result">Не удалось получить\nсписок вакансий</string>
+    <string name="job_experience">Требуемый опыт</string>
+    <string name="job_description">Описание вакансии</string>
+    <string name="job_skills">Ключевые навыки</string>
+    <string name="job_contacts">Контакты</string>
+    <string name="job_contact_name">Контактное лицо</string>
+    <string name="job_contact_email">E-mail</string>
+    <string name="job_contact_phone">Телефон</string>
     <plurals name="numberOfVacancies" tools:ignore="MissingQuantity">
         <item quantity="one">Найдена %1$d вакансия</item>
         <item quantity="few">Найдено %1$d вакансии</item>
