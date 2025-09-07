@@ -1,25 +1,12 @@
 package ru.practicum.android.diploma.util.mappers
 
-import ru.practicum.android.diploma.data.dto.AddressDto
 import ru.practicum.android.diploma.data.dto.ContactsDto
-import ru.practicum.android.diploma.data.dto.EmployerDto
-import ru.practicum.android.diploma.data.dto.EmploymentDto
-import ru.practicum.android.diploma.data.dto.ExperienceDto
-import ru.practicum.android.diploma.data.dto.PhoneDto
 import ru.practicum.android.diploma.data.dto.SalaryDto
-import ru.practicum.android.diploma.data.dto.ScheduleDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailDto
-import ru.practicum.android.diploma.domain.models.Address
-import ru.practicum.android.diploma.domain.models.Contacts
-import ru.practicum.android.diploma.domain.models.Employer
-import ru.practicum.android.diploma.domain.models.Employment
-import ru.practicum.android.diploma.domain.models.Experience
-import ru.practicum.android.diploma.domain.models.FilterArea
-import ru.practicum.android.diploma.domain.models.FilterIndustry
-import ru.practicum.android.diploma.domain.models.Phone
-import ru.practicum.android.diploma.domain.models.Salary
-import ru.practicum.android.diploma.domain.models.Schedule
+import ru.practicum.android.diploma.domain.models.Contact
 import ru.practicum.android.diploma.domain.models.Vacancy
+import java.text.NumberFormat
+import java.util.Locale
 
 class VacancyMapper(
     private val filterAreaMapper: FilterAreaMapper,
@@ -31,57 +18,59 @@ class VacancyMapper(
         name = dto.name.orEmpty(),
         description = dto.description.orEmpty(),
         salary = dto.salary.toDomain(),
-        address = dto.address.toDomain(),
-        experience = dto.experience.toDomain(),
-        schedule = dto.schedule.toDomain(),
-        employment = dto.employment.toDomain(),
-        contacts = dto.contacts.toDomain(),
-        employer = dto.employer.toDomain(),
-        area = dto.area?.let { filterAreaMapper.map(it) } ?: FilterArea(0, "", null, emptyList()),
+        city = dto.address?.city.orEmpty(),
+        address = dto.address?.raw.orEmpty(),
+        experience = dto.experience?.name.orEmpty(),
+        conditions = getConditions(dto.employment?.name, dto.schedule?.name),
+        contact = dto.contacts.toDomain(),
+        employerName = dto.employer?.name.orEmpty(),
+        employerLogo = dto.employer?.logo.orEmpty(),
         skills = dto.skills.orEmpty(),
         url = dto.url.orEmpty(),
-        industry = dto.industry?.let { filterIndustryMapper.map(it) } ?: FilterIndustry(0, "")
+        isFavorite = false
     )
 
-    private fun SalaryDto?.toDomain(): Salary = this?.let {
-        Salary(id = it.id, currency = it.currency ?: "", from = it.from, to = it.to)
-    } ?: Salary("", "", null, null)
+    private fun SalaryDto?.toDomain(): String = this?.let {
+        @Suppress("DEPRECATION")
+        val numberFormat = NumberFormat.getNumberInstance(Locale("ru"))
 
-    private fun AddressDto?.toDomain(): Address = this?.let {
-        Address(
-            id = it.id,
-            city = it.city.orEmpty(),
-            street = it.street.orEmpty(),
-            building = it.building.orEmpty(),
-            fullAddress = it.raw.orEmpty()
-        )
-    } ?: Address("", "", "", "", "")
+        var salaryString = ""
+        if (it.from != null) salaryString += "от ${numberFormat.format(it.from)} "
+        if (it.to != null) salaryString += "до ${numberFormat.format(it.to)} "
 
-    private fun ExperienceDto?.toDomain(): Experience = this?.let {
-        Experience(id = it.id, name = it.name.orEmpty())
-    } ?: Experience("", "")
+        if (salaryString.isNotEmpty()) {
+            if (!it.currency.isNullOrEmpty()) salaryString += getCurrencySymbol(it.currency)
+        } else {
+            salaryString = "Уровень зарплаты не указан"
+        }
 
-    private fun ScheduleDto?.toDomain(): Schedule = this?.let {
-        Schedule(id = it.id, name = it.name.orEmpty())
-    } ?: Schedule("", "")
+        salaryString
+    } ?: ""
 
-    private fun EmploymentDto?.toDomain(): Employment = this?.let {
-        Employment(id = it.id, name = it.name.orEmpty())
-    } ?: Employment("", "")
+    private fun getCurrencySymbol(currencyCode: String): String {
+        return when (currencyCode) {
+            "RUR" -> "₽"
+            "RUB" -> "₽"
+            "USD" -> "$"
+            "EUR" -> "€"
+            "KZT" -> "₸"
+            "UAH" -> "₴"
+            "AZN" -> "₼"
+            "GEL" -> "₾"
+            else -> currencyCode
+        }
+    }
 
-    private fun ContactsDto?.toDomain(): Contacts = this?.let {
-        Contacts(
-            id = it.id,
+    private fun getConditions(employment: String?, schedule: String?): String {
+        val separator = if (employment != null && schedule != null) ", " else ""
+        return (employment ?: "") + separator + (schedule ?: "")
+    }
+
+    private fun ContactsDto?.toDomain(): Contact = this?.let {
+        Contact(
             name = it.name.orEmpty(),
             email = it.email.orEmpty(),
-            phones = it.phones.orEmpty().map { it.toDomain() })
-    } ?: Contacts("", "", "", emptyList())
+            phones = it.phones.orEmpty().map { it.formatted ?: "" })
+    } ?: Contact("", "", emptyList())
 
-    private fun PhoneDto?.toDomain(): Phone = this?.let {
-        Phone(comment = it.comment, formatted = it.formatted.orEmpty())
-    } ?: Phone(null, "")
-
-    private fun EmployerDto?.toDomain(): Employer = this?.let {
-        Employer(id = it.id, name = it.name.orEmpty(), logoUrl = it.logo.orEmpty())
-    } ?: Employer("", "", "")
 }

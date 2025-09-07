@@ -6,4 +6,3 @@ data class FilterParametersDto(
     val salary: Int?,
     val onlyWithSalary: Boolean = false,
 )
-

@@ -13,3 +13,4 @@ val Gray = Color(COLOR_AEAFB4)
 val Blue = Color(COLOR_3772E7)
 val NeutralLight = Color(COLOR_FDFDFD)
 val NeutralDark = Color(COLOR_1A1B22)
+val Transparent = Color.Transparent

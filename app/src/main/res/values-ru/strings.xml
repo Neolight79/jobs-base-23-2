@@ -8,4 +8,16 @@
     <string name="android_developer">Андроид разработчик</string>
     <string name="github_name">Никнейм на GitHub</string>
     <string name="arrow_back">Назад</string>
+    <string name="title_search">Поиск вакансий</string>
+    <string name="title_filters">Настройки фильтрации</string>
+    <string name="enter_request">Введите запрос</string>
+    <string name="no_connection">Нет интернета</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="no_such_vacancies_found">Таких вакансий нет</string>
+    <string name="empty_search_result">Не удалось получить\nсписок вакансий</string>
+    <plurals name="numberOfVacancies">
+        <item quantity="one">Найдена %1$d вакансия</item>
+        <item quantity="few">Найдено %1$d вакансии</item>
+        <item quantity="other">Найдено %1$d вакансий</item>
+    </plurals>
 </resources>

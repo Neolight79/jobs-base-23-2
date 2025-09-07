@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.data.network
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.data.dto.Request
@@ -20,7 +21,10 @@ class RetrofitNetworkClient(
             if (response.isSuccess && response.getOrNull() != null) {
                 response.getOrThrow().apply { resultCode = HTTP_OK_200 }
             } else {
-                Response().apply { resultCode = HTTP_INTERNAL_SERVER_ERROR_500 }
+                Response().apply {
+                    resultCode = HTTP_INTERNAL_SERVER_ERROR_500
+                    Log.e("Error response", "Ошибка:=$message")
+                }
             }
         }
     }

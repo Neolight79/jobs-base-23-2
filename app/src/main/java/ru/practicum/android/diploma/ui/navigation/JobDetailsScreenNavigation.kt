@@ -15,7 +15,7 @@ import ru.practicum.android.diploma.ui.compoose.ROUTE_JOB_DETAILS
 fun NavGraphBuilder.jobDetailsScreenNavigation(navController: NavHostController) {
     composable(
         route = "$ROUTE_JOB_DETAILS/{$JOB_ID}",
-        arguments = listOf(navArgument(JOB_ID) { type = NavType.IntType }),
+        arguments = listOf(navArgument(JOB_ID) { type = NavType.StringType }),
         enterTransition = {
             slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Down, tween(ANIMATION_DELAY))
         },
