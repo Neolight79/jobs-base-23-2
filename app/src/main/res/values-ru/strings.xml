@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Practicum-Android-Diploma</string>
     <string name="screen_main">Главная</string>
     <string name="screen_favorites">Избранное</string>
     <string name="screen_team">Команда</string>
+    <string name="screen_job_details">Вакансия</string>
     <string name="сurrent_job">Должность</string>
     <string name="android_developer">Андроид разработчик</string>
     <string name="github_name">Никнейм на GitHub</string>
@@ -15,7 +16,7 @@
     <string name="server_error">Ошибка сервера</string>
     <string name="no_such_vacancies_found">Таких вакансий нет</string>
     <string name="empty_search_result">Не удалось получить\nсписок вакансий</string>
-    <plurals name="numberOfVacancies">
+    <plurals name="numberOfVacancies" tools:ignore="MissingQuantity">
         <item quantity="one">Найдена %1$d вакансия</item>
         <item quantity="few">Найдено %1$d вакансии</item>
         <item quantity="other">Найдено %1$d вакансий</item>

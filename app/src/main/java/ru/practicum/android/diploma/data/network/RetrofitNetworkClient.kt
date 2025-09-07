@@ -23,7 +23,7 @@ class RetrofitNetworkClient(
             } else {
                 Response().apply {
                     resultCode = HTTP_INTERNAL_SERVER_ERROR_500
-                    Log.e(ERROR_TAG, "$ERROR_MESSAGE $message")
+                    Log.e(ERROR_TAG, message)
                 }
             }
         }
@@ -42,7 +42,7 @@ class RetrofitNetworkClient(
             } else {
                 Response().apply {
                     resultCode = HTTP_INTERNAL_SERVER_ERROR_500
-                    Log.e(ERROR_TAG, "$ERROR_MESSAGE $message")
+                    Log.e(ERROR_TAG, message)
                 }
             }
         }
@@ -60,7 +60,7 @@ class RetrofitNetworkClient(
             } else {
                 Response().apply {
                     resultCode = HTTP_INTERNAL_SERVER_ERROR_500
-                    Log.e(ERROR_TAG, "$ERROR_MESSAGE $message")
+                    Log.e(ERROR_TAG, message)
                 }
             }
         }
@@ -78,7 +78,7 @@ class RetrofitNetworkClient(
             } else {
                 Response().apply {
                     resultCode = HTTP_INTERNAL_SERVER_ERROR_500
-                    Log.e(ERROR_TAG, "$ERROR_MESSAGE $message")
+                    Log.e(ERROR_TAG, message)
                 }
             }
         }
@@ -100,7 +100,6 @@ class RetrofitNetworkClient(
         const val HTTP_BAD_REQUEST_400 = 400
         const val HTTP_INTERNAL_SERVER_ERROR_500 = 500
         const val HTTP_SERVICE_UNAVAILABLE_503 = 503
-        const val ERROR_MESSAGE = "Error message:"
-        const val ERROR_TAG = "Error response"
+        const val ERROR_TAG = "Error response message:"
     }
 }
