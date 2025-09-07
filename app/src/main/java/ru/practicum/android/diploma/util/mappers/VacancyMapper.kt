@@ -4,6 +4,7 @@ import ru.practicum.android.diploma.data.dto.ContactsDto
 import ru.practicum.android.diploma.data.dto.SalaryDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailDto
 import ru.practicum.android.diploma.domain.models.Contact
+import ru.practicum.android.diploma.domain.models.Phone
 import ru.practicum.android.diploma.domain.models.Vacancy
 import java.text.NumberFormat
 import java.util.Locale
@@ -18,8 +19,8 @@ class VacancyMapper(
         name = dto.name.orEmpty(),
         description = dto.description.orEmpty(),
         salary = dto.salary.toDomain(),
-        city = dto.address?.city.orEmpty(),
-        address = dto.address?.raw.orEmpty(),
+        city = if (dto.address?.city != null) dto.address.city else dto.area?.name.orEmpty(),
+        address = if (dto.address?.raw != null) dto.address.raw else dto.area?.name.orEmpty(),
         experience = dto.experience?.name.orEmpty(),
         conditions = getConditions(dto.employment?.name, dto.schedule?.name),
         contact = dto.contacts.toDomain(),
@@ -70,7 +71,11 @@ class VacancyMapper(
         Contact(
             name = it.name.orEmpty(),
             email = it.email.orEmpty(),
-            phones = it.phones.orEmpty().map { it.formatted ?: "" })
+            phones = it.phones.orEmpty().map { Phone(
+                comment = it.comment,
+                formatted = it.formatted.orEmpty()
+            ) }
+        )
     } ?: Contact("", "", emptyList())
 
 }
