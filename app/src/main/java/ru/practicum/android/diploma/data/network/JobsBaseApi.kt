@@ -14,7 +14,7 @@ interface JobsBaseApi {
     suspend fun getVacancies(@QueryMap options: Map<String, String>): VacanciesResponse
 
     @GET("/vacancies/{id}")
-    suspend fun getVacancyById(@Path("id") vacancyId: String?): VacancyDetailResponse
+    suspend fun getVacancyById(@Path("id") vacancyId: String): VacancyDetailResponse
 
     @GET("/areas")
     suspend fun getAreas(): FilterAreaResponse
