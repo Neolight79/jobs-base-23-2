@@ -123,39 +123,38 @@ class MainViewModel(
     }
 
     private fun processResult(foundVacancies: VacanciesPage?, searchStatus: SearchResultStatus) {
-        if (currentPage == 0) {
-            when (searchStatus) {
-                SearchResultStatus.Success -> {
-                    if (foundVacancies == null) {
-                        renderState(SearchState.EmptyResult)
-                    } else {
-                        renderState(provideVacancies(foundVacancies))
-                    }
-                }
-                SearchResultStatus.NoConnection -> {
-                    renderState(SearchState.NoConnection)
-                }
-                SearchResultStatus.ServerError -> {
-                    renderState(SearchState.ServerError)
+        val context = application.applicationContext
+        when (searchStatus) {
+            SearchResultStatus.Success -> {
+                if (foundVacancies == null) {
+                    renderState(
+                        if (currentPage == 0) {
+                            SearchState.EmptyResult
+                        } else {
+                            provideEndOfList(context.getString(R.string.empty_search_result))
+                        }
+                    )
+                } else {
+                    renderState(provideVacancies(foundVacancies))
                 }
             }
-        } else {
-            val context = application.applicationContext
-            when (searchStatus) {
-                SearchResultStatus.Success -> {
-                    if (foundVacancies == null) {
-                        renderState(provideEndOfList(context.getString(R.string.empty_search_result)))
+            SearchResultStatus.NoConnection -> {
+                renderState(
+                    if (currentPage == 0) {
+                        SearchState.NoConnection
                     } else {
-                        renderState(provideVacancies(foundVacancies))
+                        provideEndOfList(context.getString(R.string.no_connection))
                     }
-                }
-                SearchResultStatus.NoConnection -> {
-                    renderState(provideEndOfList(context.getString(R.string.no_connection)))
-
-                }
-                SearchResultStatus.ServerError -> {
-                    renderState(provideEndOfList(context.getString(R.string.server_error)))
-                }
+                )
+            }
+            SearchResultStatus.ServerError -> {
+                renderState(
+                    if (currentPage == 0) {
+                        SearchState.ServerError
+                    } else {
+                        provideEndOfList(context.getString(R.string.server_error))
+                    }
+                )
             }
         }
     }

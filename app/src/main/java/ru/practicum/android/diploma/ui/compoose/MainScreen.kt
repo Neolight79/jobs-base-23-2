@@ -173,8 +173,9 @@ fun MainScreen(
                     }
                 )
                 LaunchedEffect(searchState) {
-                    if (searchState.errorMessage != null)
+                    if (searchState.errorMessage != null) {
                         Toast.makeText(context, searchState.errorMessage, Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         }
