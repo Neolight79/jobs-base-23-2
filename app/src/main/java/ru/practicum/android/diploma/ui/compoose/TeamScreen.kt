@@ -1,12 +1,8 @@
 package ru.practicum.android.diploma.ui.compoose
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,6 +32,7 @@ fun TeamScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                windowInsets = androidx.compose.foundation.layout.WindowInsets(0),
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
                     titleContentColor = MaterialTheme.colorScheme.onBackground,
@@ -68,17 +65,15 @@ fun TeamScreen(
             )
         },
         containerColor = MaterialTheme.colorScheme.background,
-        contentWindowInsets = WindowInsets.systemBars
     ) { innerPadding ->
-        Column(
+        androidx.compose.foundation.lazy.LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = PaddingBase)
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+            item {
                 TeamComponent(
                     teamMember = TeamMember(
                         name = "Владислав",
@@ -88,6 +83,8 @@ fun TeamScreen(
                         imageRes = null,
                     )
                 )
+            }
+            item {
                 TeamComponent(
                     teamMember = TeamMember(
                         name = "Сергей",
@@ -97,6 +94,8 @@ fun TeamScreen(
                         imageRes = null,
                     )
                 )
+            }
+            item {
                 TeamComponent(
                     teamMember = TeamMember(
                         name = "Евгений",
@@ -106,6 +105,8 @@ fun TeamScreen(
                         imageRes = null,
                     )
                 )
+            }
+            item {
                 TeamComponent(
                     teamMember = TeamMember(
                         name = "Елена",
