@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.ui.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,26 +13,32 @@ import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancyState
 
 class JobDetailsViewModel(
-    jobID: String,
+    private val jobID: String,
     private val vacanciesInteractor: VacanciesInteractor,
     private val application: Application
 ) : ViewModel() {
 
-    // Временный StateFlow для передачи идентификатора вакансии
-    private val _vacancyIdState = MutableStateFlow<String>(jobID)
-    val vacancyIdState: StateFlow<String> = _vacancyIdState.asStateFlow()
-
     private val _vacancyState = MutableStateFlow<VacancyState>(VacancyState.Loading)
     val vacancyState: StateFlow<VacancyState> = _vacancyState.asStateFlow()
 
-    fun getVacancyDetail(vacancyId: String) {
+    private val _favoriteState = MutableStateFlow<Boolean>(false)
+    val favoriteState: StateFlow<Boolean> = _favoriteState.asStateFlow()
+
+    fun onFavoriteClicked() {
+        renderFavoriteState(true)
+    }
+
+    fun onShareClicked() {
+        return
+    }
+
+    fun requestVacancyDetail() {
         renderState(VacancyState.Loading)
         viewModelScope.launch {
-            val response = vacanciesInteractor.getVacancyById(vacancyId)
+            val response = vacanciesInteractor.getVacancyById(jobID)
             processResult(response.first, response.second)
         }
     }
-
 
     private fun processResult(vacancy: Vacancy?, searchStatus: SearchResultStatus) {
         when (searchStatus) {
@@ -42,12 +47,15 @@ class JobDetailsViewModel(
                     renderState(VacancyState.EmptyResult)
                 } else {
                     renderState(VacancyState.VacancyDetail(vacancy))
+                    renderFavoriteState(vacancy.isFavorite)
                 }
             }
             else -> renderState(VacancyState.ServerError)
         }
+    }
 
-
+    private fun renderFavoriteState(isFavorite: Boolean) {
+        _favoriteState.value = isFavorite
     }
 
     private fun renderState(state: VacancyState) {

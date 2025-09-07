@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
@@ -38,6 +39,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import ru.practicum.android.diploma.R
@@ -65,10 +68,13 @@ fun JobDetailsScreen(
     navController: NavController,
     viewModel: JobDetailsViewModel
 ) {
-    val vacancyIdState = viewModel.vacancyIdState.collectAsState().value
     val vacancyState = viewModel.vacancyState.collectAsState().value
+    val favoriteState = viewModel.favoriteState.collectAsState().value
 
-    viewModel.getVacancyDetail(vacancyIdState)
+    LifecycleStartEffect(Unit) {
+        viewModel.requestVacancyDetail()
+        onStopOrDispose { }
+    }
 
     Scaffold(
         topBar = {
@@ -105,20 +111,24 @@ fun JobDetailsScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = {}
+                        onClick = { viewModel.onShareClicked() }
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.Share ,
-                            contentDescription = stringResource(R.string.arrow_back),
+                            imageVector = Icons.Filled.Share,
+                            contentDescription = stringResource(R.string.share),
                             modifier = Modifier.size(ArrowBackHeight)
                         )
                     }
                     IconButton(
-                        onClick = {}
+                        onClick = { viewModel.onFavoriteClicked() }
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.FavoriteBorder ,
-                            contentDescription = stringResource(R.string.arrow_back),
+                            imageVector = if (favoriteState) {
+                                Icons.Filled.Favorite
+                            } else {
+                                Icons.Filled.FavoriteBorder
+                            },
+                            contentDescription = stringResource(R.string.favorite),
                             modifier = Modifier.size(ArrowBackHeight)
                         )
                     }
@@ -129,6 +139,7 @@ fun JobDetailsScreen(
     ) { innerPadding ->
 
         when (vacancyState) {
+
             is VacancyState.Loading -> ProgressbarBox()
 
             is VacancyState.ServerError -> Placeholder(

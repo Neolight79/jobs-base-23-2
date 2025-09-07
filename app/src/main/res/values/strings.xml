@@ -8,6 +8,8 @@
     <string name="android_developer">Android developer</string>
     <string name="github_name">GitHub nickname</string>
     <string name="arrow_back">Back</string>
+    <string name="share">Share</string>
+    <string name="favorite">Favorite</string>
     <string name="title_search">Search jobs</string>
     <string name="title_filters">Filter settings</string>
     <string name="enter_request">Enter request</string>
