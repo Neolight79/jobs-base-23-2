@@ -4,6 +4,7 @@ import ru.practicum.android.diploma.data.dto.ContactsDto
 import ru.practicum.android.diploma.data.dto.SalaryDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailDto
 import ru.practicum.android.diploma.domain.models.Contact
+import ru.practicum.android.diploma.domain.models.Phone
 import ru.practicum.android.diploma.domain.models.Vacancy
 import java.text.NumberFormat
 import java.util.Locale
@@ -70,7 +71,11 @@ class VacancyMapper(
         Contact(
             name = it.name.orEmpty(),
             email = it.email.orEmpty(),
-            phones = it.phones.orEmpty().map { it.formatted ?: "" })
+            phones = it.phones.orEmpty().map { Phone(
+                comment = it.comment,
+                formatted = it.formatted.orEmpty()
+            ) }
+        )
     } ?: Contact("", "", emptyList())
 
 }

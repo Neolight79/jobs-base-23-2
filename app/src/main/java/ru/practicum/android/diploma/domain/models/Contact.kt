@@ -6,5 +6,5 @@ data class Contact(
     // E-mail контактного лица работодателя
     val email: String,
     // Телефоны контактного лица работодателя
-    val phones: List<String>
+    val phones: List<Phone>
 )
