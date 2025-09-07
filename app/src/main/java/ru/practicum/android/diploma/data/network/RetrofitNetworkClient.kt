@@ -23,7 +23,7 @@ class RetrofitNetworkClient(
             } else {
                 Response().apply {
                     resultCode = HTTP_INTERNAL_SERVER_ERROR_500
-                    Log.e("Error response", "Ошибка:=$message")
+                    Log.e(ERROR_TAG, "$ERROR_MESSAGE $message")
                 }
             }
         }
@@ -34,12 +34,16 @@ class RetrofitNetworkClient(
         if (errorResponse != null) return errorResponse
         return withContext(Dispatchers.IO) {
             val response = runCatching {
-                jobsBaseApiService.getVacancyById((request as Request).options["id"])
+                val id = (request as Request).options["id"]!!
+                jobsBaseApiService.getVacancyById(id)
             }
             if (response.isSuccess && response.getOrNull() != null) {
                 response.getOrThrow().apply { resultCode = HTTP_OK_200 }
             } else {
-                Response().apply { resultCode = HTTP_INTERNAL_SERVER_ERROR_500 }
+                Response().apply {
+                    resultCode = HTTP_INTERNAL_SERVER_ERROR_500
+                    Log.e(ERROR_TAG, "$ERROR_MESSAGE $message")
+                }
             }
         }
     }
@@ -54,7 +58,10 @@ class RetrofitNetworkClient(
             if (response.isSuccess && response.getOrNull() != null) {
                 response.getOrThrow().apply { resultCode = HTTP_OK_200 }
             } else {
-                Response().apply { resultCode = HTTP_INTERNAL_SERVER_ERROR_500 }
+                Response().apply {
+                    resultCode = HTTP_INTERNAL_SERVER_ERROR_500
+                    Log.e(ERROR_TAG, "$ERROR_MESSAGE $message")
+                }
             }
         }
     }
@@ -69,7 +76,10 @@ class RetrofitNetworkClient(
             if (response.isSuccess && response.getOrNull() != null) {
                 response.getOrThrow().apply { resultCode = HTTP_OK_200 }
             } else {
-                Response().apply { resultCode = HTTP_INTERNAL_SERVER_ERROR_500 }
+                Response().apply {
+                    resultCode = HTTP_INTERNAL_SERVER_ERROR_500
+                    Log.e(ERROR_TAG, "$ERROR_MESSAGE $message")
+                }
             }
         }
     }
@@ -90,5 +100,7 @@ class RetrofitNetworkClient(
         const val HTTP_BAD_REQUEST_400 = 400
         const val HTTP_INTERNAL_SERVER_ERROR_500 = 500
         const val HTTP_SERVICE_UNAVAILABLE_503 = 503
+        const val ERROR_MESSAGE = "Error message:"
+        const val ERROR_TAG = "Error response"
     }
 }

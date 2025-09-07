@@ -2,12 +2,14 @@ package ru.practicum.android.diploma.domain.impl
 
 import ru.practicum.android.diploma.data.dto.Request
 import ru.practicum.android.diploma.data.dto.VacanciesResponse
+import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_OK_200
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_SERVICE_UNAVAILABLE_503
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
 import ru.practicum.android.diploma.domain.models.VacanciesPage
+import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.util.mappers.VacancyMapper
 
 class VacanciesInteractorImpl(
@@ -61,6 +63,21 @@ class VacanciesInteractorImpl(
             }
         } finally {
             isLoading = false
+        }
+    }
+
+    override suspend fun getVacancyById(id: String): Pair<Vacancy?, SearchResultStatus> {
+        val request = Request(options = mapOf("id" to id))
+        val response = networkClient.getVacancyById(request)
+
+        return if (response.resultCode == HTTP_OK_200 && response is VacancyDetailResponse) {
+            val vacancyDto = vacancyMapper.detailResponseToDto(response)
+            val vacancy = vacancyMapper.map(vacancyDto)
+            Pair(vacancy, SearchResultStatus.Success)
+        } else if (response.resultCode == HTTP_SERVICE_UNAVAILABLE_503) {
+            Pair(null, SearchResultStatus.NoConnection)
+        } else {
+            Pair(null, SearchResultStatus.ServerError)
         }
     }
 
