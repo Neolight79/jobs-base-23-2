@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.util.mappers
 import ru.practicum.android.diploma.data.dto.ContactsDto
 import ru.practicum.android.diploma.data.dto.SalaryDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailDto
+import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
 import ru.practicum.android.diploma.domain.models.Contact
 import ru.practicum.android.diploma.domain.models.Phone
 import ru.practicum.android.diploma.domain.models.Vacancy
@@ -30,6 +31,25 @@ class VacancyMapper(
         url = dto.url.orEmpty(),
         isFavorite = false
     )
+
+    fun detailResponseToDto(response: VacancyDetailResponse): VacancyDetailDto {
+        return VacancyDetailDto(
+            id = response.id,
+            name = response.name,
+            description = response.description,
+            salary = response.salary,
+            address = response.address,
+            experience = response.experience,
+            schedule = response.schedule,
+            employment = response.employment,
+            contacts = response.contacts,
+            employer = response.employer,
+            area = response.area,
+            skills = response.skills,
+            url = response.url,
+            industry = response.industry
+        )
+    }
 
     private fun SalaryDto?.toDomain(): String = this?.let {
         @Suppress("DEPRECATION")
