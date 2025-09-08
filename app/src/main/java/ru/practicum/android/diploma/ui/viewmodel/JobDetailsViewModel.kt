@@ -32,8 +32,12 @@ class JobDetailsViewModel(
         renderFavoriteState(true)
     }
 
-    fun onShareClicked() {
-        return
+    fun onShareClicked(vacancy: Vacancy) {
+        makeIntent(
+            action = Intent.ACTION_SEND,
+            extra = vacancy.url,
+            type = "text/plain"
+        )
     }
 
     fun requestVacancyDetail() {
@@ -52,10 +56,17 @@ class JobDetailsViewModel(
         makeIntent(Intent.ACTION_DIAL, "tel: $callTo".toUri())
     }
 
-    private fun makeIntent(action: String, data: Uri) {
+    private fun makeIntent(
+        action: String,
+        data: Uri? = null,
+        extra: String? = null,
+        type: String? = null
+    ) {
         val context = application.applicationContext
         val intent = Intent(action)
-        intent.data = data
+        if (data != null) intent.data = data
+        if (extra != null) intent.putExtra(Intent.EXTRA_TEXT, extra)
+        if (type != null) intent.type = type
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val chooser = Intent.createChooser(intent, context.getString(R.string.choose_app))
         chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
