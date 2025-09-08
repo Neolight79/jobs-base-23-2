@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("ru.practicum.android.diploma.plugins.developproperties")
+    id("kotlin-kapt")
 }
 
 android {
@@ -84,6 +85,7 @@ dependencies {
     // Подключаем Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
     // Подключаем Jetpack Compose
     val composeBom = platform("androidx.compose:compose-bom:2025.08.01")
     implementation(composeBom)
