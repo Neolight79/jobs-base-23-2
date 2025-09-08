@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.domain.impl
 
-import ru.practicum.android.diploma.data.FavoriteDao
 import ru.practicum.android.diploma.data.dto.Request
 import ru.practicum.android.diploma.data.dto.VacanciesResponse
 import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
@@ -15,8 +14,7 @@ import ru.practicum.android.diploma.util.mappers.VacancyMapper
 
 class VacanciesInteractorImpl(
     private val networkClient: NetworkClient,
-    private val vacancyMapper: VacancyMapper,
-    private val favoriteDao: FavoriteDao
+    private val vacancyMapper: VacancyMapper
 ) : VacanciesInteractor {
 
     private var currentPage = 1
@@ -50,17 +48,10 @@ class VacanciesInteractorImpl(
                 val currentPage = if (response.items.isEmpty()) {
                     null
                 } else {
-                    val favoriteIds = favoriteDao.getFavoriteIdsOnce().toSet()
-
-                    val vacancies = response.items.map { dto ->
-                        val v = vacancyMapper.map(dto)
-                        v.copy(isFavorite = favoriteIds.contains(v.id))
-                    }
-
                     VacanciesPage(
                         totalVacancies = response.found,
                         pageNumber = page,
-                        vacancies = vacancies
+                        vacancies = response.items.map { vacancyMapper.map(it) }
                     )
                 }
                 val currentStatus = SearchResultStatus.Success
@@ -82,9 +73,7 @@ class VacanciesInteractorImpl(
         return if (response.resultCode == HTTP_OK_200 && response is VacancyDetailResponse) {
             val vacancyDto = vacancyMapper.detailResponseToDto(response)
             val vacancy = vacancyMapper.map(vacancyDto)
-            val isFav = favoriteDao.isFavorite(vacancy.id)
-            val marked = vacancy.copy(isFavorite = isFav)
-            Pair(marked, SearchResultStatus.Success)
+            Pair(vacancy, SearchResultStatus.Success)
         } else if (response.resultCode == HTTP_SERVICE_UNAVAILABLE_503) {
             Pair(null, SearchResultStatus.NoConnection)
         } else {
@@ -92,19 +81,4 @@ class VacanciesInteractorImpl(
         }
     }
 
-    override suspend fun isFavorite(vacancyId: String): Boolean =
-        favoriteDao.isFavorite(vacancyId)
-
-    override suspend fun addToFavorites(vacancy: Vacancy) {
-        favoriteDao.insertFavorite(vacancyMapper.toFavoriteEntity(vacancy))
-    }
-
-    override suspend fun removeFromFavorites(vacancyId: String) {
-        favoriteDao.deleteByVacancyId(vacancyId)
-    }
-
-    fun resetPagination() {
-        currentPage = 1
-        totalPages = 1
-    }
 }

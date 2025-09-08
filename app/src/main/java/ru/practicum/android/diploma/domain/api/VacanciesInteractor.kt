@@ -15,7 +15,4 @@ interface VacanciesInteractor {
     ): Pair<VacanciesPage?, SearchResultStatus>
 
     suspend fun getVacancyById(id: String): Pair<Vacancy?, SearchResultStatus>
-    suspend fun isFavorite(vacancyId: String): Boolean
-    suspend fun addToFavorites(vacancy: Vacancy)
-    suspend fun removeFromFavorites(vacancyId: String)
 }
