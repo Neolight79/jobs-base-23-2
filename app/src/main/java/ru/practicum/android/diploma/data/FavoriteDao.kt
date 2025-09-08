@@ -28,5 +28,4 @@ interface FavoriteDao {
 
     @Query("SELECT * FROM favorites ORDER BY id DESC")
     fun getFavorites(): Flow<List<VacancyFavoriteEntity>>
-
 }
