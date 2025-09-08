@@ -4,7 +4,6 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
     id("kotlin-kapt")
     id("ru.practicum.android.diploma.plugins.developproperties")
-    id("kotlin-kapt")
 }
 
 android {
