@@ -2,12 +2,7 @@ package ru.practicum.android.diploma.ui.compoose
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -20,8 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.TeamMember
-import ru.practicum.android.diploma.ui.theme.ArrowBackHeight
-import ru.practicum.android.diploma.ui.theme.ArrowBackTouchTarget
 import ru.practicum.android.diploma.ui.theme.PaddingBase
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,22 +38,7 @@ fun TeamScreen(
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(start = PaddingBase)
                     )
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { onBackClick() },
-                        modifier = Modifier
-                            .size(ArrowBackTouchTarget)
-                            .padding(start = PaddingBase)
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.arrow_back),
-                            modifier = Modifier.size(ArrowBackHeight)
-                        )
-                    }
                 }
             )
         },

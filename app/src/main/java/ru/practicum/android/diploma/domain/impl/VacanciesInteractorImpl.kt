@@ -81,8 +81,4 @@ class VacanciesInteractorImpl(
         }
     }
 
-    fun resetPagination() {
-        currentPage = 1
-        totalPages = 1
-    }
 }

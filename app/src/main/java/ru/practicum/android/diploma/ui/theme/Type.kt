@@ -41,5 +41,12 @@ val Typography = Typography(
         fontSize = FontSizeSmall,
         lineHeight = LineHeightSmall,
         letterSpacing = LetterSpacing
-    )
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = DiplomaFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = FontSizeRegular,
+        lineHeight = LineHeightRegular,
+        letterSpacing = LetterSpacing
+    ),
 )
