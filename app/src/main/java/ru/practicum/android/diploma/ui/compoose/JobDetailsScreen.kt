@@ -145,7 +145,6 @@ fun JobDetailsScreen(
     ) { innerPadding ->
 
         when (vacancyState) {
-
             is VacancyState.Loading -> ProgressbarBox()
 
             is VacancyState.ServerError -> Placeholder(
@@ -165,7 +164,7 @@ fun JobDetailsScreen(
                         .padding(innerPadding)
                         .padding(horizontal = PaddingBase)
                         .verticalScroll(rememberScrollState()),
-                        horizontalAlignment = Alignment.Start,
+                    horizontalAlignment = Alignment.Start,
                 ) {
                     VacancyTop(vacancyState.vacancy)
                     VacancyCard(vacancyState.vacancy)
@@ -338,7 +337,7 @@ private fun VacancyContacts(vacancy: Vacancy, onEmailClick: (String) -> Unit, on
             }
             if (vacancy.contact.phones.isNotEmpty()) {
                 val lazyColumnHeight = vacancy.contact.phones.count() *
-                    ( 2 * LineHeightRegularDp.value + 2 * PaddingSmall.value) +
+                    (2 * LineHeightRegularDp.value + 2 * PaddingSmall.value) +
                     2 * PaddingSmall.value
                 LazyColumn(
                     modifier = Modifier.height(lazyColumnHeight.dp)

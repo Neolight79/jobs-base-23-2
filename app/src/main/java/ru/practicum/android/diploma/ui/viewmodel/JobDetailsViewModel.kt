@@ -79,7 +79,6 @@ class JobDetailsViewModel(
         }
     }
 
-
     private fun renderFavoriteState(isFavorite: Boolean) {
         _favoriteState.value = isFavorite
     }
