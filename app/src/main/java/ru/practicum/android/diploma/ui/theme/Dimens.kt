@@ -39,3 +39,4 @@ val ProgressBarSize = 36.dp
 val ProgressItemHeight = 80.dp
 val ItemListImageSpaceWidth = 60.dp
 val LogoSize = 48.dp
+val LineHeightRegularDp = 19.dp

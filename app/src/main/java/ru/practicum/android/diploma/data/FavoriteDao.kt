@@ -16,7 +16,15 @@ interface FavoriteDao {
     @Query("DELETE FROM favorites WHERE vacancyId = :vacancyId")
     suspend fun deleteFavorite(vacancyId: String)
 
+    @Query("DELETE FROM favorites WHERE vacancyId = :vacancyId")
+    suspend fun deleteByVacancyId(vacancyId: String)
+
+    @Query("SELECT EXISTS(SELECT 1 FROM favorites WHERE vacancyId = :vacancyId)")
+    suspend fun isFavorite(vacancyId: String): Boolean
+
+    @Query("SELECT vacancyId FROM favorites")
+    suspend fun getFavoriteIdsOnce(): List<String>
+
     @Query("SELECT * FROM favorites ORDER BY id DESC")
     fun getFavorites(): Flow<List<VacancyFavoriteEntity>>
-
 }

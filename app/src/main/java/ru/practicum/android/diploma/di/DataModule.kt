@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import ru.practicum.android.diploma.data.AppDatabase
+import ru.practicum.android.diploma.data.FavoriteDao
 import ru.practicum.android.diploma.data.FilterParametersSharedStorageImpl
 import ru.practicum.android.diploma.data.SharedStorage
 import ru.practicum.android.diploma.util.mappers.FilterAreaMapper
