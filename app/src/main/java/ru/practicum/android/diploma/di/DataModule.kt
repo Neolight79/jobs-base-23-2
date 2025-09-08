@@ -8,12 +8,12 @@ import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import ru.practicum.android.diploma.data.AppDatabase
-import ru.practicum.android.diploma.data.FavoriteDao
 import ru.practicum.android.diploma.data.FilterParametersSharedStorageImpl
 import ru.practicum.android.diploma.data.SharedStorage
 import ru.practicum.android.diploma.util.mappers.FilterAreaMapper
 import ru.practicum.android.diploma.util.mappers.FilterIndustryMapper
 import ru.practicum.android.diploma.util.mappers.FilterParametersMapper
+import ru.practicum.android.diploma.util.mappers.VacancyDbConverter
 import ru.practicum.android.diploma.util.mappers.VacancyMapper
 
 private const val SHARED_PREFERENCES_FILE_NAME = "favorites_shared_preferences"
@@ -27,8 +27,9 @@ val dataModule = module {
         androidContext().resources
     }
 
-    single {
+    single<AppDatabase> {
         Room.databaseBuilder(androidContext(), AppDatabase::class.java, DB_NAME)
+            .fallbackToDestructiveMigration(true)
             .build()
     }
 
@@ -59,8 +60,6 @@ val dataModule = module {
         )
     }
 
-    single<FavoriteDao> {
-        get<AppDatabase>().favoriteDao()
-    }
+    factory { VacancyDbConverter() }
 
 }

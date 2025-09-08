@@ -4,7 +4,6 @@ import ru.practicum.android.diploma.data.dto.ContactsDto
 import ru.practicum.android.diploma.data.dto.SalaryDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
-import ru.practicum.android.diploma.data.dto.VacancyFavoriteEntity
 import ru.practicum.android.diploma.domain.models.Contact
 import ru.practicum.android.diploma.domain.models.Phone
 import ru.practicum.android.diploma.domain.models.Vacancy
@@ -99,44 +98,4 @@ class VacancyMapper(
         )
     } ?: Contact("", "", emptyList())
 
-    fun toFavoriteEntity(v: Vacancy): VacancyFavoriteEntity {
-        return VacancyFavoriteEntity(
-            id = 0,
-            vacancyId = v.id,
-            vacancyName = v.name,
-            employerName = v.employerName,
-            employerLogo = v.employerLogo,
-            salaryFrom = null,
-            salaryTo = null,
-            salaryCurrency = null
-        )
-    }
-
-    private fun SalaryDto?.toDisplayString(): String = this.toDomain()
-
-    fun fromFavoriteEntity(e: VacancyFavoriteEntity): Vacancy {
-        val salaryDisplay = SalaryDto(
-            id = "",
-            from = e.salaryFrom?.toIntOrNull(),
-            to = e.salaryTo?.toIntOrNull(),
-            currency = e.salaryCurrency
-        ).toDisplayString()
-
-        return Vacancy(
-            id = e.vacancyId,
-            name = e.vacancyName.orEmpty(),
-            description = "",
-            salary = salaryDisplay,
-            city = "",
-            address = "",
-            experience = "",
-            conditions = "",
-            contact = Contact("", "", emptyList()),
-            employerName = e.employerName.orEmpty(),
-            employerLogo = e.employerLogo.orEmpty(),
-            skills = emptyList(),
-            url = "",
-            isFavorite = true
-        )
-    }
 }
