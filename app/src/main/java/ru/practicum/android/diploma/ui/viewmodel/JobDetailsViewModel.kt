@@ -98,4 +98,14 @@ class JobDetailsViewModel(
         _vacancyState.value = state
     }
 
+    // fun onFavoriteClick() = viewModelScope.launch {
+    //    val v = _ui.value.vacancy ?: return@launch
+    //    if (v.isFavorite) {
+    //        vacanciesInteractor.removeFromFavorites(v.id)
+    //        _ui.update { it.copy(vacancy = v.copy(isFavorite = false)) }
+    //   } else {
+    //        vacanciesInteractor.addToFavorites(v)
+    //        _ui.update { it.copy(vacancy = v.copy(isFavorite = true)) }
+//    }
+
 }
