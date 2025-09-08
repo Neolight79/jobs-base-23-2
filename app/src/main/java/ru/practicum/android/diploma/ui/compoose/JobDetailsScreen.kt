@@ -112,7 +112,11 @@ fun JobDetailsScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { viewModel.onShareClicked() }
+                        onClick = {
+                            if (vacancyState is VacancyState.VacancyDetail) {
+                                viewModel.onShareClicked(vacancyState.vacancy)
+                            }
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Share,
@@ -154,7 +158,7 @@ fun JobDetailsScreen(
 
             is VacancyState.EmptyResult -> Placeholder(
                 PlaceholderImages.JobDeleted,
-                stringResource(R.string.no_connection)
+                stringResource(R.string.vacancy_error)
             )
 
             is VacancyState.VacancyDetail -> {
@@ -232,7 +236,7 @@ private fun VacancyCard(vacancy: Vacancy) {
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = vacancy.city,
+                    text = vacancy.address,
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
