@@ -30,7 +30,6 @@ class JobDetailsViewModel(
     private val _favoriteState = MutableStateFlow<Boolean>(false)
     val favoriteState: StateFlow<Boolean> = _favoriteState.asStateFlow()
 
-
     fun onFavoriteClicked() {
         val vacancy = when (val state = _vacancyState.value) {
             is VacancyState.VacancyDetail -> state.vacancy
@@ -61,11 +60,12 @@ class JobDetailsViewModel(
         renderState(VacancyState.Loading)
         viewModelScope.launch {
             val response = vacanciesInteractor.getVacancyById(jobID)
+            var vacancy = response.first
             if (favoriteInteractor.checkIsFavorite(jobID)) {
-                response.first?.isFavorite = true
+                vacancy = vacancy?.copy(isFavorite = true)
                 renderFavoriteState(true)
             }
-            processResult(response.first, response.second)
+            processResult(vacancy, response.second)
         }
     }
 
@@ -104,7 +104,6 @@ class JobDetailsViewModel(
                     renderFavoriteState(vacancy.isFavorite)
                 }
             }
-
             SearchResultStatus.NoConnection -> {
                 if (_favoriteState.value) {
                     viewModelScope.launch {
@@ -116,6 +115,15 @@ class JobDetailsViewModel(
                 }
             }
 
+            SearchResultStatus.NotFound -> {
+                if (_favoriteState.value) {
+                    viewModelScope.launch {
+                        val vacancy = favoriteInteractor.getFavoriteById(jobID)
+                        favoriteInteractor.deleteVacancyFromFavorites(vacancy)
+                        renderState(VacancyState.EmptyResult)
+                    }
+                }
+            }
             else -> renderState(VacancyState.EmptyResult)
         }
     }
@@ -127,15 +135,4 @@ class JobDetailsViewModel(
     private fun renderState(state: VacancyState) {
         _vacancyState.value = state
     }
-
-    // fun onFavoriteClick() = viewModelScope.launch {
-    //    val v = _ui.value.vacancy ?: return@launch
-    //    if (v.isFavorite) {
-    //        vacanciesInteractor.removeFromFavorites(v.id)
-    //        _ui.update { it.copy(vacancy = v.copy(isFavorite = false)) }
-    //   } else {
-    //        vacanciesInteractor.addToFavorites(v)
-    //        _ui.update { it.copy(vacancy = v.copy(isFavorite = true)) }
-//    }
-
 }
