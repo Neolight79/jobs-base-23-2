@@ -1,6 +1,6 @@
 package ru.practicum.android.diploma.ui.compoose
 
-import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,7 +39,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
@@ -49,6 +48,7 @@ import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancyState
 import ru.practicum.android.diploma.ui.theme.ArrowBackHeight
 import ru.practicum.android.diploma.ui.theme.ArrowBackTouchTarget
+import ru.practicum.android.diploma.ui.theme.Blue
 import ru.practicum.android.diploma.ui.theme.CornerRadius
 import ru.practicum.android.diploma.ui.theme.ItemListImageSpaceWidth
 import ru.practicum.android.diploma.ui.theme.LightGray
@@ -57,6 +57,7 @@ import ru.practicum.android.diploma.ui.theme.LogoSize
 import ru.practicum.android.diploma.ui.theme.NeutralDark
 import ru.practicum.android.diploma.ui.theme.PaddingBase
 import ru.practicum.android.diploma.ui.theme.PaddingSmall
+import ru.practicum.android.diploma.ui.theme.Red
 import ru.practicum.android.diploma.ui.viewmodel.JobDetailsViewModel
 
 private const val WEIGHT_1F = 1F
@@ -128,6 +129,11 @@ fun JobDetailsScreen(
                             } else {
                                 Icons.Filled.FavoriteBorder
                             },
+                            tint = if (favoriteState) {
+                                Red
+                            } else {
+                                MaterialTheme.colorScheme.onBackground
+                            },
                             contentDescription = stringResource(R.string.favorite),
                             modifier = Modifier.size(ArrowBackHeight)
                         )
@@ -162,16 +168,15 @@ fun JobDetailsScreen(
                         horizontalAlignment = Alignment.Start,
                 ) {
                     VacancyTop(vacancyState.vacancy)
-
                     VacancyCard(vacancyState.vacancy)
-
                     VacancyExperienceConditions(vacancyState.vacancy)
-
                     VacancyDescription(vacancyState.vacancy)
-
                     VacancySkills(vacancyState.vacancy)
-
-                    VacancyContacts(vacancyState.vacancy)
+                    VacancyContacts(
+                        vacancyState.vacancy,
+                        { email -> viewModel.sendEmail(email) },
+                        { phone -> viewModel.makeCall(phone) }
+                    )
                 }
             }
         }
@@ -297,7 +302,7 @@ private fun VacancySkills(vacancy: Vacancy) {
 }
 
 @Composable
-private fun VacancyContacts(vacancy: Vacancy) {
+private fun VacancyContacts(vacancy: Vacancy, onEmailClick: (String) -> Unit, onPhoneClick: (String) -> Unit) {
     if (vacancy.contact.name.isNotEmpty()) {
         Column(Modifier.padding(vertical = PaddingBase)) {
             Text(
@@ -322,9 +327,12 @@ private fun VacancyContacts(vacancy: Vacancy) {
                         style = MaterialTheme.typography.headlineSmall
                     )
                     Text(
-                        modifier = Modifier,
+                        modifier = Modifier.clickable {
+                            onEmailClick.invoke(vacancy.contact.email)
+                        },
                         text = vacancy.contact.email,
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Blue
                     )
                 }
             }
@@ -342,13 +350,15 @@ private fun VacancyContacts(vacancy: Vacancy) {
                                 style = MaterialTheme.typography.headlineSmall
                             )
                             Text(
-                                modifier = Modifier,
+                                modifier = Modifier.clickable {
+                                    onPhoneClick.invoke(phone.formatted)
+                                },
                                 text = phone.formatted,
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Blue
                             )
                             if (phone.comment != null) {
                                 Text(
-                                    modifier = Modifier,
                                     text = phone.comment,
                                     style = MaterialTheme.typography.bodyLarge
                                 )

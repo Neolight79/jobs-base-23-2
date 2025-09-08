@@ -24,6 +24,7 @@
     <string name="job_contact_name">Contact name</string>
     <string name="job_contact_email">E-mail</string>
     <string name="job_contact_phone">Phone</string>
+    <string name="choose_app">Choose the application</string>
     <plurals name="numberOfVacancies">
         <item quantity="one">Found %1$d vacancy</item>
         <item quantity="other">Found %1$d vacancies</item>

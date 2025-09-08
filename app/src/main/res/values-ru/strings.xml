@@ -25,6 +25,7 @@
     <string name="job_contact_name">Контактное лицо</string>
     <string name="job_contact_email">E-mail</string>
     <string name="job_contact_phone">Телефон</string>
+    <string name="choose_app">Выберите приложение</string>
     <plurals name="numberOfVacancies" tools:ignore="MissingQuantity">
         <item quantity="one">Найдена %1$d вакансия</item>
         <item quantity="few">Найдено %1$d вакансии</item>

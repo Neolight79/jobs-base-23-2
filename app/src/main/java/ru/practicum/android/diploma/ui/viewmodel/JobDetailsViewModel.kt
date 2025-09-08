@@ -1,12 +1,16 @@
 package ru.practicum.android.diploma.ui.viewmodel
 
 import android.app.Application
+import android.content.Intent
+import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
 import ru.practicum.android.diploma.domain.models.Vacancy
@@ -40,6 +44,24 @@ class JobDetailsViewModel(
         }
     }
 
+    fun sendEmail(mailTo: String) {
+        makeIntent(Intent.ACTION_SENDTO, "mailto: $mailTo".toUri())
+    }
+
+    fun makeCall(callTo: String) {
+        makeIntent(Intent.ACTION_DIAL, "tel: $callTo".toUri())
+    }
+
+    private fun makeIntent(action: String, data: Uri) {
+        val context = application.applicationContext
+        val intent = Intent(action)
+        intent.data = data
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val chooser = Intent.createChooser(intent, context.getString(R.string.choose_app))
+        chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(chooser)
+    }
+
     private fun processResult(vacancy: Vacancy?, searchStatus: SearchResultStatus) {
         when (searchStatus) {
             SearchResultStatus.Success -> {
@@ -50,9 +72,13 @@ class JobDetailsViewModel(
                     renderFavoriteState(vacancy.isFavorite)
                 }
             }
-            else -> renderState(VacancyState.ServerError)
+            SearchResultStatus.NoConnection -> {
+                renderState(VacancyState.ServerError)
+            }
+            else -> renderState(VacancyState.EmptyResult)
         }
     }
+
 
     private fun renderFavoriteState(isFavorite: Boolean) {
         _favoriteState.value = isFavorite
