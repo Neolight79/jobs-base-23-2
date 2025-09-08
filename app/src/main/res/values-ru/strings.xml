@@ -16,7 +16,7 @@
     <string name="enter_request">Введите запрос</string>
     <string name="no_connection">Нет интернета</string>
     <string name="server_error">Ошибка сервера</string>
-    <string name="vacancy_error">Вакансия не найдена или удалена</string>
+    <string name="vacancy_error">Вакансия не найдена или\nудалена</string>
     <string name="no_such_vacancies_found">Таких вакансий нет</string>
     <string name="empty_search_result">Не удалось получить\nсписок вакансий</string>
     <string name="job_experience">Требуемый опыт</string>

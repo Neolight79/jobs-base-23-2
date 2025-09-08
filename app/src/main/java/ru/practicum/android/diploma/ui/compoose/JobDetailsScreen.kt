@@ -236,7 +236,7 @@ private fun VacancyCard(vacancy: Vacancy) {
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = vacancy.city,
+                    text = vacancy.address,
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
