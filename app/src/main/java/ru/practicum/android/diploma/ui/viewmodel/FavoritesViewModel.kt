@@ -6,12 +6,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.domain.api.VacanciesInteractor
+import ru.practicum.android.diploma.domain.FavoritesInteractor
 import ru.practicum.android.diploma.domain.models.FavoritesState
 import ru.practicum.android.diploma.domain.models.Vacancy
 
 class FavoritesViewModel(
-    private val vacanciesInteractor: VacanciesInteractor
+    private val favoritesInteractor: FavoritesInteractor
 ) : ViewModel() {
 
     // StateFlow для состояния экрана избранных вакансий
@@ -23,10 +23,9 @@ class FavoritesViewModel(
         _favoritesState.value = FavoritesState.Loading
 
         viewModelScope.launch {
-            // ToDo вызывать функцию получения списка избранных вакансий и флага ошибки, затем передать в обработку результата
-//            favoritesInteractor.getFavoriteVacancies().collect { pair ->
-//                processResult(pair.first, pair.second)
-//            }
+            favoritesInteractor.getFavoriteVacancies().collect { vacancies ->
+                processResult(vacancies, true)
+            }
         }
     }
     // endregion

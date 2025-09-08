@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.domain.FavoritesInteractor
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
 import ru.practicum.android.diploma.domain.models.Vacancy
@@ -19,6 +20,7 @@ import ru.practicum.android.diploma.domain.models.VacancyState
 class JobDetailsViewModel(
     private val jobID: String,
     private val vacanciesInteractor: VacanciesInteractor,
+    private val favoritesInteractor: FavoritesInteractor,
     private val application: Application
 ) : ViewModel() {
 
@@ -28,8 +30,17 @@ class JobDetailsViewModel(
     private val _favoriteState = MutableStateFlow<Boolean>(false)
     val favoriteState: StateFlow<Boolean> = _favoriteState.asStateFlow()
 
+    private lateinit var currentVacancy: Vacancy
+
     fun onFavoriteClicked() {
-        renderFavoriteState(true)
+        viewModelScope.launch {
+            if (_favoriteState.value) {
+                favoritesInteractor.deleteVacancyFromFavorites(currentVacancy)
+            } else {
+                favoritesInteractor.addVacancyToFavorites(currentVacancy)
+            }
+        }
+        renderFavoriteState(!_favoriteState.value)
     }
 
     fun onShareClicked(vacancy: Vacancy) {
@@ -79,6 +90,7 @@ class JobDetailsViewModel(
                 if (vacancy == null) {
                     renderState(VacancyState.EmptyResult)
                 } else {
+                    currentVacancy = vacancy
                     renderState(VacancyState.VacancyDetail(vacancy))
                     renderFavoriteState(vacancy.isFavorite)
                 }
@@ -97,15 +109,5 @@ class JobDetailsViewModel(
     private fun renderState(state: VacancyState) {
         _vacancyState.value = state
     }
-
-    // fun onFavoriteClick() = viewModelScope.launch {
-    //    val v = _ui.value.vacancy ?: return@launch
-    //    if (v.isFavorite) {
-    //        vacanciesInteractor.removeFromFavorites(v.id)
-    //        _ui.update { it.copy(vacancy = v.copy(isFavorite = false)) }
-    //   } else {
-    //        vacanciesInteractor.addToFavorites(v)
-    //        _ui.update { it.copy(vacancy = v.copy(isFavorite = true)) }
-//    }
 
 }

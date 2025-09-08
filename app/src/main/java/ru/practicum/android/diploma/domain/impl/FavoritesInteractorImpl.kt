@@ -17,6 +17,10 @@ class FavoritesInteractorImpl(
         favoritesRepository.deleteVacancyFromFavorites(vacancy)
     }
 
+    override fun getFavoriteVacancyById(vacancyId: String): Flow<Vacancy?> {
+        return favoritesRepository.getFavoriteVacancyById(vacancyId)
+    }
+
     override fun getFavoriteVacancies(): Flow<List<Vacancy>> {
         return favoritesRepository.getFavoriteVacancies()
     }
