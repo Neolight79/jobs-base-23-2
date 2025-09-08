@@ -98,6 +98,7 @@ class RetrofitNetworkClient(
     companion object {
         const val HTTP_OK_200 = 200
         const val HTTP_BAD_REQUEST_400 = 400
+        const val HTTP_NOT_FOUND_404 = 400
         const val HTTP_INTERNAL_SERVER_ERROR_500 = 500
         const val HTTP_SERVICE_UNAVAILABLE_503 = 503
         const val ERROR_TAG = "Error response message:"

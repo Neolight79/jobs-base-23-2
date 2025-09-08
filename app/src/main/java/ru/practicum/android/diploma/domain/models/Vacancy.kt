@@ -42,6 +42,6 @@ data class Vacancy(
     val url: String,
 
     // Признак того, что вакансия находится в списке избранных
-    val isFavorite: Boolean = false
+    var isFavorite: Boolean = false
 
 )
