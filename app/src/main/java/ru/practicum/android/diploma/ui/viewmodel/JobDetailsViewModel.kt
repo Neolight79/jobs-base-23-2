@@ -114,15 +114,15 @@ class JobDetailsViewModel(
                     renderState(VacancyState.ServerError)
                 }
             }
-
             SearchResultStatus.NotFound -> {
                 if (_favoriteState.value) {
                     viewModelScope.launch {
                         val vacancy = favoriteInteractor.getFavoriteById(jobID)
                         favoriteInteractor.deleteVacancyFromFavorites(vacancy)
-                        renderState(VacancyState.EmptyResult)
+                        renderFavoriteState(false)
                     }
                 }
+                renderState(VacancyState.EmptyResult)
             }
             else -> renderState(VacancyState.EmptyResult)
         }
