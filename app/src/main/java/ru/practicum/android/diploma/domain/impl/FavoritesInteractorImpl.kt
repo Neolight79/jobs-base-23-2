@@ -17,12 +17,16 @@ class FavoritesInteractorImpl(
         favoritesRepository.deleteVacancyFromFavorites(vacancy)
     }
 
-    override fun getFavoriteVacancyById(vacancyId: String): Flow<Vacancy?> {
-        return favoritesRepository.getFavoriteVacancyById(vacancyId)
-    }
-
     override fun getFavoriteVacancies(): Flow<List<Vacancy>> {
         return favoritesRepository.getFavoriteVacancies()
+    }
+
+    override suspend fun checkIsFavorite(vacancyId: String): Boolean {
+        return favoritesRepository.isFavorite(vacancyId)
+    }
+
+    override suspend fun getFavoriteById(vacancyId: String): Vacancy {
+        return favoritesRepository.getFavoriteById(vacancyId)
     }
 
 }

@@ -1,13 +1,13 @@
 package ru.practicum.android.diploma.domain.impl
 
-import kotlinx.coroutines.flow.first
 import ru.practicum.android.diploma.data.dto.Request
 import ru.practicum.android.diploma.data.dto.VacanciesResponse
 import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
 import ru.practicum.android.diploma.data.network.NetworkClient
+import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_BAD_REQUEST_400
+import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_NOT_FOUND_404
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_OK_200
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_SERVICE_UNAVAILABLE_503
-import ru.practicum.android.diploma.domain.FavoritesRepository
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
 import ru.practicum.android.diploma.domain.models.VacanciesPage
@@ -16,8 +16,7 @@ import ru.practicum.android.diploma.util.mappers.VacancyMapper
 
 class VacanciesInteractorImpl(
     private val networkClient: NetworkClient,
-    private val vacancyMapper: VacancyMapper,
-    private val favoritesRepository: FavoritesRepository
+    private val vacancyMapper: VacancyMapper
 ) : VacanciesInteractor {
 
     private var currentPage = 1
@@ -75,12 +74,12 @@ class VacanciesInteractorImpl(
 
         return if (response.resultCode == HTTP_OK_200 && response is VacancyDetailResponse) {
             val vacancyDto = vacancyMapper.detailResponseToDto(response)
-            val vacancy = vacancyMapper.map(vacancyDto).copy(
-                isFavorite = favoritesRepository.getFavoriteVacancyById(id).first() != null
-            )
+            val vacancy = vacancyMapper.map(vacancyDto)
             Pair(vacancy, SearchResultStatus.Success)
         } else if (response.resultCode == HTTP_SERVICE_UNAVAILABLE_503) {
             Pair(null, SearchResultStatus.NoConnection)
+        } else if (response.resultCode == HTTP_BAD_REQUEST_400 || response.resultCode == HTTP_NOT_FOUND_404) {
+            Pair(null, SearchResultStatus.NotFound)
         } else {
             Pair(null, SearchResultStatus.ServerError)
         }

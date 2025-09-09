@@ -20,8 +20,8 @@ import ru.practicum.android.diploma.domain.models.VacancyState
 class JobDetailsViewModel(
     private val jobID: String,
     private val vacanciesInteractor: VacanciesInteractor,
-    private val favoritesInteractor: FavoritesInteractor,
-    private val application: Application
+    private val application: Application,
+    private val favoriteInteractor: FavoritesInteractor
 ) : ViewModel() {
 
     private val _vacancyState = MutableStateFlow<VacancyState>(VacancyState.Loading)
@@ -30,17 +30,22 @@ class JobDetailsViewModel(
     private val _favoriteState = MutableStateFlow<Boolean>(false)
     val favoriteState: StateFlow<Boolean> = _favoriteState.asStateFlow()
 
-    private lateinit var currentVacancy: Vacancy
-
     fun onFavoriteClicked() {
-        viewModelScope.launch {
-            if (_favoriteState.value) {
-                favoritesInteractor.deleteVacancyFromFavorites(currentVacancy)
-            } else {
-                favoritesInteractor.addVacancyToFavorites(currentVacancy)
+        val vacancy = when (val state = _vacancyState.value) {
+            is VacancyState.VacancyDetail -> state.vacancy
+            else -> null
+        }
+        if (vacancy != null && !_favoriteState.value) {
+            renderFavoriteState(true)
+            viewModelScope.launch {
+                favoriteInteractor.addVacancyToFavorites(vacancy)
+            }
+        } else {
+            renderFavoriteState(false)
+            viewModelScope.launch {
+                vacancy?.let { favoriteInteractor.deleteVacancyFromFavorites(it) }
             }
         }
-        renderFavoriteState(!_favoriteState.value)
     }
 
     fun onShareClicked(vacancy: Vacancy) {
@@ -55,7 +60,12 @@ class JobDetailsViewModel(
         renderState(VacancyState.Loading)
         viewModelScope.launch {
             val response = vacanciesInteractor.getVacancyById(jobID)
-            processResult(response.first, response.second)
+            var vacancy = response.first
+            if (favoriteInteractor.checkIsFavorite(jobID)) {
+                vacancy = vacancy?.copy(isFavorite = true)
+                renderFavoriteState(true)
+            }
+            processResult(vacancy, response.second)
         }
     }
 
@@ -90,13 +100,29 @@ class JobDetailsViewModel(
                 if (vacancy == null) {
                     renderState(VacancyState.EmptyResult)
                 } else {
-                    currentVacancy = vacancy
                     renderState(VacancyState.VacancyDetail(vacancy))
                     renderFavoriteState(vacancy.isFavorite)
                 }
             }
             SearchResultStatus.NoConnection -> {
-                renderState(VacancyState.ServerError)
+                if (_favoriteState.value) {
+                    viewModelScope.launch {
+                        val vacancy = favoriteInteractor.getFavoriteById(jobID)
+                        renderState(VacancyState.VacancyDetail(vacancy))
+                    }
+                } else {
+                    renderState(VacancyState.ServerError)
+                }
+            }
+
+            SearchResultStatus.NotFound -> {
+                if (_favoriteState.value) {
+                    viewModelScope.launch {
+                        val vacancy = favoriteInteractor.getFavoriteById(jobID)
+                        favoriteInteractor.deleteVacancyFromFavorites(vacancy)
+                        renderState(VacancyState.EmptyResult)
+                    }
+                }
             }
             else -> renderState(VacancyState.EmptyResult)
         }
@@ -109,5 +135,4 @@ class JobDetailsViewModel(
     private fun renderState(state: VacancyState) {
         _vacancyState.value = state
     }
-
 }

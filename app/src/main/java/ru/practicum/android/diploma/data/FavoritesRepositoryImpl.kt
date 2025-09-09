@@ -26,12 +26,12 @@ class FavoritesRepositoryImpl(
         emit(convertFromVacancyFavoriteEntity(vacancies))
     }
 
-    override fun getFavoriteVacancyById(vacancyId: String): Flow<Vacancy?> = flow {
-        val vacancies =
-            convertFromVacancyFavoriteEntity(
-                appDatabase.favoriteDao().searchFavoriteVacanciesById(vacancyId).first()
-            )
-        emit(if (vacancies.isNotEmpty()) vacancies[0] else null)
+    override suspend fun isFavorite(vacancyId: String): Boolean {
+        return appDatabase.favoriteDao().isFavorite(vacancyId)
+    }
+
+    override suspend fun getFavoriteById(vacancyId: String): Vacancy {
+        return vacancyDbConvertor.map(appDatabase.favoriteDao().getFavoriteById(vacancyId))
     }
 
     private fun convertFromVacancyFavoriteEntity(vacancies: List<VacancyFavoriteEntity>): List<Vacancy> {
