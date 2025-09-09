@@ -28,4 +28,5 @@ class FavoritesInteractorImpl(
     override suspend fun getFavoriteById(vacancyId: String): Vacancy {
         return favoritesRepository.getFavoriteById(vacancyId)
     }
+
 }

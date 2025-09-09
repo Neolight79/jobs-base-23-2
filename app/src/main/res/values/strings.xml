@@ -30,4 +30,6 @@
         <item quantity="one">Found %1$d vacancy</item>
         <item quantity="other">Found %1$d vacancies</item>
     </plurals>
+    <string name="title_favorites">Favorites</string>
+    <string name="empty_list">List is empty</string>
 </resources>
