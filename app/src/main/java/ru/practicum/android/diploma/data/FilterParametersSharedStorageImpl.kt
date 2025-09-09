@@ -18,7 +18,7 @@ class FilterParametersSharedStorageImpl(
 
     override fun getData(defaultData: Any?): Any {
         return gson.fromJson(
-            sharedPreferences.getString(FILTERS_SHARED_KEY, defaultData as? String),
+            sharedPreferences.getString(FILTERS_SHARED_KEY, gson.toJson(defaultData)),
             FilterParametersDto::class.java
         )
     }

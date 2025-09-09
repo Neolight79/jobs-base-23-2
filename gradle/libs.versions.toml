@@ -5,6 +5,7 @@ java = "VERSION_1_8"
 # Build constants
 minSdk = "26"
 compileSdk = "36"
+roomCompiler = "2.7.2"
 targetSdk = "36"
 
 # Detekt
@@ -36,6 +37,7 @@ lifecycleViewmodelCompose = "2.9.3"
 [libraries]
 
 # Detekt
+androidx-room-compiler-v250 = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 staticAnalysis-detektPlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 staticAnalysis-detektCli = { module = "io.gitlab.arturbosch.detekt:detekt-cli", version.ref = "detekt" }
 staticAnalysis-detektApi = { module = "io.gitlab.arturbosch.detekt:detekt-api", version.ref = "detekt" }
@@ -49,7 +51,7 @@ androidX-core = "androidx.core:core-ktx:1.17.0"
 androidX-appCompat = "androidx.appcompat:appcompat:1.7.1"
 
 # UI layer libraries
-ui-material = "com.google.android.material:material:1.12.0"
+ui-material = "com.google.android.material:material:1.13.0"
 ui-constraintLayout = "androidx.constraintlayout:constraintlayout:2.2.1"
 
 # Unit tests
