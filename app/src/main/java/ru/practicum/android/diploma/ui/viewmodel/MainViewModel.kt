@@ -138,6 +138,7 @@ class MainViewModel(
                     renderState(provideVacancies(foundVacancies))
                 }
             }
+
             SearchResultStatus.NoConnection -> {
                 renderState(
                     if (currentPage == 0) {
@@ -147,7 +148,9 @@ class MainViewModel(
                     }
                 )
             }
-            SearchResultStatus.ServerError -> {
+
+            SearchResultStatus.ServerError,
+            SearchResultStatus.NotFound -> {
                 renderState(
                     if (currentPage == 0) {
                         SearchState.ServerError

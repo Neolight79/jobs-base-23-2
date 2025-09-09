@@ -26,6 +26,14 @@ class FavoritesRepositoryImpl(
         emit(convertFromVacancyFavoriteEntity(vacancies))
     }
 
+    override suspend fun isFavorite(vacancyId: String): Boolean {
+        return appDatabase.favoriteDao().isFavorite(vacancyId)
+    }
+
+    override suspend fun getFavoriteById(vacancyId: String): Vacancy {
+        return vacancyDbConvertor.map(appDatabase.favoriteDao().getFavoriteById(vacancyId))
+    }
+
     private fun convertFromVacancyFavoriteEntity(vacancies: List<VacancyFavoriteEntity>): List<Vacancy> {
         return vacancies.map { vacancy -> vacancyDbConvertor.map(vacancy) }
     }

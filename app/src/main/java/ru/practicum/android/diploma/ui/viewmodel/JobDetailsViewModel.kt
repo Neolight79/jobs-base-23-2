@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.domain.FavoritesInteractor
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
 import ru.practicum.android.diploma.domain.models.Vacancy
@@ -19,7 +20,8 @@ import ru.practicum.android.diploma.domain.models.VacancyState
 class JobDetailsViewModel(
     private val jobID: String,
     private val vacanciesInteractor: VacanciesInteractor,
-    private val application: Application
+    private val application: Application,
+    private val favoriteInteractor: FavoritesInteractor
 ) : ViewModel() {
 
     private val _vacancyState = MutableStateFlow<VacancyState>(VacancyState.Loading)
@@ -29,7 +31,21 @@ class JobDetailsViewModel(
     val favoriteState: StateFlow<Boolean> = _favoriteState.asStateFlow()
 
     fun onFavoriteClicked() {
-        renderFavoriteState(true)
+        val vacancy = when (val state = _vacancyState.value) {
+            is VacancyState.VacancyDetail -> state.vacancy
+            else -> null
+        }
+        if (vacancy != null && !_favoriteState.value) {
+            renderFavoriteState(true)
+            viewModelScope.launch {
+                favoriteInteractor.addVacancyToFavorites(vacancy)
+            }
+        } else {
+            renderFavoriteState(false)
+            viewModelScope.launch {
+                vacancy?.let { favoriteInteractor.deleteVacancyFromFavorites(it) }
+            }
+        }
     }
 
     fun onShareClicked(vacancy: Vacancy) {
@@ -44,7 +60,12 @@ class JobDetailsViewModel(
         renderState(VacancyState.Loading)
         viewModelScope.launch {
             val response = vacanciesInteractor.getVacancyById(jobID)
-            processResult(response.first, response.second)
+            var vacancy = response.first
+            if (favoriteInteractor.checkIsFavorite(jobID)) {
+                vacancy = vacancy?.copy(isFavorite = true)
+                renderFavoriteState(true)
+            }
+            processResult(vacancy, response.second)
         }
     }
 
@@ -84,7 +105,24 @@ class JobDetailsViewModel(
                 }
             }
             SearchResultStatus.NoConnection -> {
-                renderState(VacancyState.ServerError)
+                if (_favoriteState.value) {
+                    viewModelScope.launch {
+                        val vacancy = favoriteInteractor.getFavoriteById(jobID)
+                        renderState(VacancyState.VacancyDetail(vacancy))
+                    }
+                } else {
+                    renderState(VacancyState.ServerError)
+                }
+            }
+
+            SearchResultStatus.NotFound -> {
+                if (_favoriteState.value) {
+                    viewModelScope.launch {
+                        val vacancy = favoriteInteractor.getFavoriteById(jobID)
+                        favoriteInteractor.deleteVacancyFromFavorites(vacancy)
+                        renderState(VacancyState.EmptyResult)
+                    }
+                }
             }
             else -> renderState(VacancyState.EmptyResult)
         }
@@ -97,15 +135,4 @@ class JobDetailsViewModel(
     private fun renderState(state: VacancyState) {
         _vacancyState.value = state
     }
-
-    // fun onFavoriteClick() = viewModelScope.launch {
-    //    val v = _ui.value.vacancy ?: return@launch
-    //    if (v.isFavorite) {
-    //        vacanciesInteractor.removeFromFavorites(v.id)
-    //        _ui.update { it.copy(vacancy = v.copy(isFavorite = false)) }
-    //   } else {
-    //        vacanciesInteractor.addToFavorites(v)
-    //        _ui.update { it.copy(vacancy = v.copy(isFavorite = true)) }
-//    }
-
 }

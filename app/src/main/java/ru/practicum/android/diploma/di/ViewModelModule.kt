@@ -11,6 +11,6 @@ val viewModelModule = module {
     }
 
     viewModel { params ->
-        JobDetailsViewModel(params.get(), get(), get())
+        JobDetailsViewModel(params.get(), get(), get(), get())
     }
 }
