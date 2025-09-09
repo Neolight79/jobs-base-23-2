@@ -12,74 +12,86 @@ class RetrofitNetworkClient(
 ) : NetworkClient {
 
     override suspend fun getVacancies(request: Any?): Response {
-        val errorResponse = checkRequest(request)
+        var errorResponse = checkRequest(request)
         if (errorResponse != null) return errorResponse
         return withContext(Dispatchers.IO) {
             val response = runCatching {
                 jobsBaseApiService.getVacancies((request as Request).options)
+            }.onFailure {
+                errorResponse = Response().apply {
+                    resultCode = (it as retrofit2.HttpException).response()?.code() ?: HTTP_INTERNAL_SERVER_ERROR_500
+                    message = it.response()?.message().toString()
+                }
             }
             if (response.isSuccess && response.getOrNull() != null) {
                 response.getOrThrow().apply { resultCode = HTTP_OK_200 }
             } else {
-                Response().apply {
-                    resultCode = HTTP_INTERNAL_SERVER_ERROR_500
-                    Log.e(ERROR_TAG, message)
-                }
+                Log.e(ERROR_TAG, (errorResponse as Response).message)
+                errorResponse
             }
         }
     }
 
     override suspend fun getVacancyById(request: Any?): Response {
-        val errorResponse = checkRequest(request)
+        var errorResponse = checkRequest(request)
         if (errorResponse != null) return errorResponse
         return withContext(Dispatchers.IO) {
             val response = runCatching {
                 val id = (request as Request).options["id"]!!
                 jobsBaseApiService.getVacancyById(id)
+            }.onFailure {
+                errorResponse = Response().apply {
+                    resultCode = (it as retrofit2.HttpException).response()?.code() ?: HTTP_INTERNAL_SERVER_ERROR_500
+                    message = it.response()?.message().toString()
+                }
             }
-            if (response.isSuccess && response.getOrNull() != null) {
+            if (response.isSuccess) {
                 response.getOrThrow().apply { resultCode = HTTP_OK_200 }
             } else {
-                Response().apply {
-                    resultCode = HTTP_INTERNAL_SERVER_ERROR_500
-                    Log.e(ERROR_TAG, message)
-                }
+                Log.e(ERROR_TAG, (errorResponse as Response).message)
+                errorResponse
             }
         }
     }
 
     override suspend fun getAreas(request: Any?): Response {
-        val errorResponse = checkRequest(request)
+        var errorResponse = checkRequest(request)
         if (errorResponse != null) return errorResponse
         return withContext(Dispatchers.IO) {
             val response = runCatching {
                 jobsBaseApiService.getAreas()
+            }.onFailure {
+                errorResponse = Response().apply {
+                    resultCode = (it as retrofit2.HttpException).response()?.code() ?: HTTP_INTERNAL_SERVER_ERROR_500
+                    message = it.response()?.message().toString()
+                }
             }
-            if (response.isSuccess && response.getOrNull() != null) {
+            if (response.isSuccess) {
                 response.getOrThrow().apply { resultCode = HTTP_OK_200 }
             } else {
-                Response().apply {
-                    resultCode = HTTP_INTERNAL_SERVER_ERROR_500
-                    Log.e(ERROR_TAG, message)
-                }
+                Log.e(ERROR_TAG, (errorResponse as Response).message)
+                errorResponse
             }
         }
     }
 
     override suspend fun getIndustries(request: Any?): Response {
-        val errorResponse = checkRequest(request)
+        var errorResponse = checkRequest(request)
         if (errorResponse != null) return errorResponse
         return withContext(Dispatchers.IO) {
             val response = runCatching {
                 jobsBaseApiService.getIndustries()
+            }.onFailure {
+                errorResponse = Response().apply {
+                    resultCode = (it as retrofit2.HttpException).response()?.code() ?: HTTP_INTERNAL_SERVER_ERROR_500
+                    message = it.response()?.message().toString()
+                }
             }
-            if (response.isSuccess && response.getOrNull() != null) {
+            if (response.isSuccess) {
                 response.getOrThrow().apply { resultCode = HTTP_OK_200 }
             } else {
-                Response().apply {
-                    resultCode = HTTP_INTERNAL_SERVER_ERROR_500
-                    Log.e(ERROR_TAG, message)
-                }
+                Log.e(ERROR_TAG, (errorResponse as Response).message)
+                errorResponse
             }
         }
     }
