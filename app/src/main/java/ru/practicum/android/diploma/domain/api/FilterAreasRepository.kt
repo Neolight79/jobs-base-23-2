@@ -4,6 +4,6 @@ import ru.practicum.android.diploma.domain.models.FilterArea
 
 interface FilterAreasRepository {
 
-    fun getFilterAreas(): List<FilterArea>
+    suspend fun getFilterAreas(): List<FilterArea>?
 
 }
