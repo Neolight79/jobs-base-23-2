@@ -17,8 +17,7 @@ class FilterParametersSharedStorageImpl(
 
     override fun getData(defaultData: FilterParametersDto): FilterParametersDto {
         val json = sharedPreferences.getString(FILTERS_SHARED_KEY, null) ?: return defaultData
-        return runCatching { gson.fromJson(json, FilterParametersDto::class.java) }
-            .getOrDefault(defaultData)
+        return gson.fromJson(json, FilterParametersDto::class.java) ?: defaultData
     }
 
     private companion object {

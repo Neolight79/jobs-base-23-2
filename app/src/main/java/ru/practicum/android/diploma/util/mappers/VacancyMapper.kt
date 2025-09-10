@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.util.mappers
 
+import android.content.Context
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.dto.ContactsDto
 import ru.practicum.android.diploma.data.dto.SalaryDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailDto
@@ -13,7 +15,7 @@ import java.util.Locale
 class VacancyMapper(
     private val filterAreaMapper: FilterAreaMapper,
     private val filterIndustryMapper: FilterIndustryMapper,
-    private val salaryNotSpecifiedText: String,
+    private val context: Context,
 ) {
 
     fun map(dto: VacancyDetailDto): Vacancy = Vacancy(
@@ -70,7 +72,7 @@ class VacancyMapper(
             }
             sb.toString().trim()
         } else {
-            salaryNotSpecifiedText
+            context.getString(R.string.salary_not_specified)
         }
     }
 

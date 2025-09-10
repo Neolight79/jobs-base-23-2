@@ -7,7 +7,6 @@ import androidx.room.Room
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.AppDatabase
 import ru.practicum.android.diploma.data.FilterParametersSharedStorageImpl
 import ru.practicum.android.diploma.data.SharedStorage
@@ -58,7 +57,7 @@ val dataModule = module {
         VacancyMapper(
             filterAreaMapper = get(),
             filterIndustryMapper = get(),
-            salaryNotSpecifiedText = androidContext().getString(R.string.salary_not_specified)
+            context = androidContext()
         )
     }
 
