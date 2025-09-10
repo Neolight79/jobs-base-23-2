@@ -10,16 +10,11 @@ class FilterParametersRepositoryImpl(
 ) : FilterParametersRepository {
 
     override fun saveFilterParameters(filterParameters: FilterParameters) {
-        val dto = filterParametersMapper.map(filterParameters)
-        sharedStorage.putData(KEY_FILTERS, dto)
+        sharedStorage.putData(filterParametersMapper.map(filterParameters))
     }
 
     override fun getFilterParameters(): FilterParameters {
-        val dto = sharedStorage.getData(
-            KEY_FILTERS,
-            FilterParametersDto(null, null, null, false)
-        )!!
+        val dto = sharedStorage.getData(FilterParametersDto(null, null, null, false))
         return filterParametersMapper.map(dto)
     }
-
 }
