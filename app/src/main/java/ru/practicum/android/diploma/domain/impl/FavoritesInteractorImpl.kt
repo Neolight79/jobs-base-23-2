@@ -13,8 +13,8 @@ class FavoritesInteractorImpl(
         favoritesRepository.addVacancyToFavorites(vacancy)
     }
 
-    override suspend fun deleteVacancyFromFavorites(vacancy: Vacancy) {
-        favoritesRepository.deleteVacancyFromFavorites(vacancy)
+    override suspend fun deleteVacancyFromFavorites(vacancyId: String) {
+        favoritesRepository.deleteVacancyFromFavorites(vacancyId)
     }
 
     override fun getFavoriteVacancies(): Flow<List<Vacancy>> {

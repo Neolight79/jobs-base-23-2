@@ -5,20 +5,23 @@ import ru.practicum.android.diploma.domain.api.FilterParametersRepository
 import ru.practicum.android.diploma.domain.models.FilterParameters
 import ru.practicum.android.diploma.util.mappers.FilterParametersMapper
 
+
 class FilterParametersRepositoryImpl(
     private val sharedStorage: SharedStorage,
     private val filterParametersMapper: FilterParametersMapper
 ) : FilterParametersRepository {
 
     override fun saveFilterParameters(filterParameters: FilterParameters) {
-        sharedStorage.putData(filterParametersMapper.map(filterParameters))
+        val dto = filterParametersMapper.map(filterParameters)
+        sharedStorage.putData(KEY_FILTERS, dto)
     }
 
     override fun getFilterParameters(): FilterParameters {
-        val filterParametersDto = sharedStorage.getData(
+        val dto = sharedStorage.getData(
+            KEY_FILTERS,
             FilterParametersDto(null, null, null, false)
-        ) as FilterParametersDto
-        return filterParametersMapper.map(filterParametersDto)
+        )!!
+        return filterParametersMapper.map(dto)
     }
 
 }

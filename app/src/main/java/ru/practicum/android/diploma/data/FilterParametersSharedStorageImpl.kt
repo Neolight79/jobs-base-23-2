@@ -3,28 +3,20 @@ package ru.practicum.android.diploma.data
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.google.gson.Gson
-import ru.practicum.android.diploma.data.dto.FilterParametersDto
 
 class FilterParametersSharedStorageImpl(
     private val sharedPreferences: SharedPreferences,
     private val gson: Gson
 ) : SharedStorage {
 
-    override fun putData(data: Any) {
-        sharedPreferences.edit {
-            putString(FILTERS_SHARED_KEY, gson.toJson(data))
-        }
+    override fun <T> putData(key: Key<T>, value: T) {
+        val json = gson.toJson(value, key.type)
+        sharedPreferences.edit { putString(key.name, json) }
     }
 
-    override fun getData(defaultData: Any?): Any {
-        return gson.fromJson(
-            sharedPreferences.getString(FILTERS_SHARED_KEY, gson.toJson(defaultData)),
-            FilterParametersDto::class.java
-        )
-    }
-
-    companion object {
-        const val FILTERS_SHARED_KEY = "FILTERS_SHARED_KEY"
+    override fun <T> getData(key: Key<T>, default: T?): T? {
+        val json = sharedPreferences.getString(key.name, null) ?: return default
+        return runCatching { gson.fromJson<T>(json, key.type) }.getOrDefault(default)
     }
 
 }

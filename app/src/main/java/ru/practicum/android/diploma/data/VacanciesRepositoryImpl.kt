@@ -32,8 +32,10 @@ class VacanciesRepositoryImpl(
     }
 
     override suspend fun getVacancyById(id: String): VacancyDetailResponse {
-        val options = mapOf("id" to id)
-        val response = networkClient.getVacancyById(Request(options))
-        return response as VacancyDetailResponse
+        val response = networkClient.getVacancyById(Request(mapOf("id" to id)))
+        return when (response) {
+            is VacancyDetailResponse -> response
+            else -> error("Unexpected response type for getVacancyById: ${response::class.simpleName}")
+        }
     }
 }

@@ -43,7 +43,7 @@ class JobDetailsViewModel(
         } else {
             renderFavoriteState(false)
             viewModelScope.launch {
-                vacancy?.let { favoriteInteractor.deleteVacancyFromFavorites(it) }
+                vacancy?.let { favoriteInteractor.deleteVacancyFromFavorites(it.id) }
             }
         }
     }
@@ -118,7 +118,7 @@ class JobDetailsViewModel(
                 if (_favoriteState.value) {
                     viewModelScope.launch {
                         val vacancy = favoriteInteractor.getFavoriteById(jobID)
-                        favoriteInteractor.deleteVacancyFromFavorites(vacancy)
+                        favoriteInteractor.deleteVacancyFromFavorites(vacancy.id)
                         renderFavoriteState(false)
                     }
                 }
