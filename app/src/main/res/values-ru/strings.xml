@@ -35,4 +35,5 @@
     </plurals>
     <string name="title_favorites">Избранное</string>
     <string name="empty_list">Список пуст</string>
+    <string name="salary_not_specified">Уровень зарплаты не указан</string>
 </resources>

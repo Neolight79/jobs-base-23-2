@@ -56,7 +56,8 @@ val dataModule = module {
     single {
         VacancyMapper(
             filterAreaMapper = get(),
-            filterIndustryMapper = get()
+            filterIndustryMapper = get(),
+            context = androidContext()
         )
     }
 

@@ -17,8 +17,8 @@ class FavoritesRepositoryImpl(
         appDatabase.favoriteDao().insertFavorite(vacancyDbConvertor.map(vacancy))
     }
 
-    override suspend fun deleteVacancyFromFavorites(vacancy: Vacancy) {
-        appDatabase.favoriteDao().deleteFavorite(vacancyDbConvertor.map(vacancy).vacancyId)
+    override suspend fun deleteVacancyFromFavorites(vacancyId: String) {
+        appDatabase.favoriteDao().deleteFavorite(vacancyId)
     }
 
     override fun getFavoriteVacancies(): Flow<List<Vacancy>> = flow {

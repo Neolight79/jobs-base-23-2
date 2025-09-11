@@ -9,22 +9,20 @@ class FilterParametersSharedStorageImpl(
     private val sharedPreferences: SharedPreferences,
     private val gson: Gson
 ) : SharedStorage {
-
-    override fun putData(data: Any) {
+    override fun putData(data: FilterParametersDto) {
         sharedPreferences.edit {
             putString(FILTERS_SHARED_KEY, gson.toJson(data))
         }
     }
 
-    override fun getData(defaultData: Any?): Any {
+    override fun getData(defaultData: FilterParametersDto): FilterParametersDto {
         return gson.fromJson(
             sharedPreferences.getString(FILTERS_SHARED_KEY, gson.toJson(defaultData)),
             FilterParametersDto::class.java
         )
     }
 
-    companion object {
+    private companion object {
         const val FILTERS_SHARED_KEY = "FILTERS_SHARED_KEY"
     }
-
 }
