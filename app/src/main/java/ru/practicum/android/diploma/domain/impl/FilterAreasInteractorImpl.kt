@@ -11,16 +11,24 @@ class FilterAreasInteractorImpl(
 
     override suspend fun getFilterAreasCountries(): Pair<List<FilterArea>?, SearchResultStatus> {
         val filterAreas = filterAreasRepository.getFilterAreas()
-        return if (filterAreas == null) Pair(null, SearchResultStatus.ServerError)
-        else Pair(filterAreas.filter { it.parentId == null }, SearchResultStatus.Success)
+        return when {
+            (filterAreas == null) -> Pair(null, SearchResultStatus.ServerError)
+            else -> Pair(filterAreas.filter { it.parentId == null }, SearchResultStatus.Success)
+        }
     }
 
     override suspend fun getFilterAreasFiltered(query: String?): Pair<List<FilterArea>?, SearchResultStatus> {
         val filterAreas = filterAreasRepository.getFilterAreas()
-        return if (filterAreas == null) Pair(null, SearchResultStatus.ServerError)
-        else Pair(
-            filterAreas.filter { it.parentId != null && it.name == query },
-            SearchResultStatus.Success
-        )
+        return when {
+            (filterAreas == null) -> Pair(null, SearchResultStatus.ServerError)
+            query.isNullOrEmpty() -> Pair(
+                filterAreas.filter { it.parentId != null }, SearchResultStatus.Success
+            )
+            else -> Pair(
+                filterAreas.filter { it.parentId != null &&
+                    it.name?.contains(query, ignoreCase = true) == true },
+                SearchResultStatus.Success
+            )
+        }
     }
 }
