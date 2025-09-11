@@ -71,16 +71,17 @@ class VacanciesInteractorImpl(
         val request = Request(options = mapOf("id" to id))
         val response = networkClient.getVacancyById(request)
 
-        return if (response.resultCode == HTTP_OK_200 && response is VacancyDetailResponse) {
-            val vacancyDto = vacancyMapper.detailResponseToDto(response)
-            val vacancy = vacancyMapper.map(vacancyDto)
-            Pair(vacancy, SearchResultStatus.Success)
-        } else if (response.resultCode == HTTP_SERVICE_UNAVAILABLE_503) {
-            Pair(null, SearchResultStatus.NoConnection)
-        } else if (response.resultCode == HTTP_NOT_FOUND_404) {
-            Pair(null, SearchResultStatus.NotFound)
-        } else {
-            Pair(null, SearchResultStatus.ServerError)
+        return when (response.resultCode) {
+            HTTP_OK_200 -> {
+                val detail = response as? VacancyDetailResponse
+                    ?: return null to SearchResultStatus.ServerError
+                val dto = vacancyMapper.detailResponseToDto(detail)
+                vacancyMapper.map(dto) to SearchResultStatus.Success
+            }
+
+            HTTP_SERVICE_UNAVAILABLE_503 -> null to SearchResultStatus.NoConnection
+            HTTP_NOT_FOUND_404 -> null to SearchResultStatus.NotFound
+            else -> null to SearchResultStatus.ServerError
         }
     }
 

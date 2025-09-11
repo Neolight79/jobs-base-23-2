@@ -32,4 +32,5 @@
     </plurals>
     <string name="title_favorites">Favorites</string>
     <string name="empty_list">List is empty</string>
+    <string name="salary_not_specified">Salary level is not specified</string>
 </resources>
