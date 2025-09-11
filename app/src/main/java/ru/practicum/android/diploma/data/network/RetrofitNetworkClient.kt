@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.data.network
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.practicum.android.diploma.data.dto.FilterAreaResponse
 import ru.practicum.android.diploma.data.dto.Request
 import ru.practicum.android.diploma.data.dto.Response
 
@@ -45,7 +46,7 @@ class RetrofitNetworkClient(
                     message = it.response()?.message().toString()
                 }
             }
-            if (response.isSuccess) {
+            if (response.isSuccess && response.getOrNull() != null) {
                 response.getOrThrow().apply { resultCode = HTTP_OK_200 }
             } else {
                 Log.e(ERROR_TAG, (errorResponse as Response).message)
@@ -66,8 +67,10 @@ class RetrofitNetworkClient(
                     message = it.response()?.message().toString()
                 }
             }
-            if (response.isSuccess) {
-                response.getOrThrow().apply { resultCode = HTTP_OK_200 }
+            if (response.isSuccess && response.getOrNull() != null) {
+                FilterAreaResponse(response.getOrThrow()).apply {
+                    resultCode = HTTP_OK_200
+                }
             } else {
                 Log.e(ERROR_TAG, (errorResponse as Response).message)
                 errorResponse
