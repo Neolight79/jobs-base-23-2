@@ -33,28 +33,23 @@ class VacanciesInteractorImpl(
     ): Pair<VacanciesPage?, SearchResultStatus> {
         isLoading = true
         try {
-            val requestOptions = mutableMapOf<String, String>()
+            val saved = filterInteractor.getFilterParameters()
+
+            val area: Int? =
+                (area ?: saved.area?.id?.toString())?.toIntOrNull()
+            val industry: Int? =
+                (industry ?: saved.industry?.id?.toString())?.toIntOrNull()
+            val salary: Int? = salary ?: saved.salary
+            val onlyWithSalary: Boolean = onlyWithSalary || saved.onlyWithSalary
+
             val response = repository.getVacancies(
-                area?.toIntOrNull(),
-                industry?.toIntOrNull(),
+                area,
+                industry,
                 text,
                 salary,
                 page,
                 onlyWithSalary
             )
-            val saved = filterInteractor.getFilterParameters()
-
-            if (!requestOptions.containsKey(PARAM_AREA)) {
-                saved.area?.id?.let { requestOptions[PARAM_AREA] = it.toString() }
-            }
-            if (!requestOptions.containsKey(PARAM_INDUSTRY)) {
-                saved.industry?.id?.let { requestOptions[PARAM_INDUSTRY] = it.toString() }
-            }
-            if (!requestOptions.containsKey(PARAM_SALARY)) {
-                saved.salary?.let { requestOptions[PARAM_SALARY] = it.toString() }
-            }
-            requestOptions[PARAM_ONLY_WITH_SALARY] = (onlyWithSalary || saved.onlyWithSalary).toString()
-
             return when {
                 response.resultCode == HTTP_OK_200 && response is VacanciesResponse -> {
                     totalPages = response.pages
@@ -98,12 +93,5 @@ class VacanciesInteractorImpl(
             HTTP_NOT_FOUND_404 -> null to SearchResultStatus.NotFound
             else -> null to SearchResultStatus.ServerError
         }
-    }
-
-    companion object {
-        private const val PARAM_AREA = "area"
-        private const val PARAM_INDUSTRY = "industry"
-        private const val PARAM_SALARY = "salary"
-        private const val PARAM_ONLY_WITH_SALARY = "only_with_salary"
     }
 }
