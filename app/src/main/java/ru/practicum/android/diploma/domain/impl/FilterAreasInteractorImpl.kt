@@ -7,21 +7,24 @@ import ru.practicum.android.diploma.domain.models.SearchResultStatus
 
 class FilterAreasInteractorImpl(
     private val filterAreasRepository: FilterAreasRepository
-) : FilterAreasInteractor{
+) : FilterAreasInteractor {
 
     override suspend fun getFilterAreasCountries(): Pair<List<FilterArea>?, SearchResultStatus> {
         val filterAreas = filterAreasRepository.getFilterAreas()
         return when {
-            (filterAreas == null) -> Pair(null, SearchResultStatus.ServerError)
+            filterAreas == null -> Pair(null, SearchResultStatus.ServerError)
             else -> Pair(
                 filterAreas.filter { it.parentId == null }
-                .map { (id, name, parentId, areas) -> FilterArea(id, name, parentId, listOf()) },
+                    .map { (id, name, parentId) -> FilterArea(id, name, parentId, listOf()) },
                 SearchResultStatus.Success
             )
         }
     }
 
-    override suspend fun getFilterAreasFiltered(parentId: Int?, query: String?): Pair<List<FilterArea>?, SearchResultStatus> {
+    override suspend fun getFilterAreasFiltered(
+        parentId: Int?,
+        query: String?
+    ): Pair<List<FilterArea>?, SearchResultStatus> {
         val filterAreas = filterAreasRepository.getFilterAreas()
         if (filterAreas == null) return Pair(null, SearchResultStatus.ServerError)
         val areas = mutableListOf<FilterArea>()
