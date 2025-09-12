@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.domain.api
 
-import ru.practicum.android.diploma.data.dto.VacanciesResponse
-import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
+import ru.practicum.android.diploma.data.dto.Response
 
 interface VacanciesRepository {
     suspend fun getVacancies(
@@ -11,7 +10,7 @@ interface VacanciesRepository {
         salary: Int? = null,
         page: Int = 1,
         onlyWithSalary: Boolean? = null
-    ): VacanciesResponse
+    ): Response
 
-    suspend fun getVacancyById(id: String): VacancyDetailResponse
+    suspend fun getVacancyById(id: String): Response
 }

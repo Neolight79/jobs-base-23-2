@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import org.koin.androidx.compose.koinViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.models.PlaceholderImages
 import ru.practicum.android.diploma.domain.models.Vacancy
@@ -67,7 +68,7 @@ private const val ONE_LINE = 1
 @Composable
 fun JobDetailsScreen(
     navController: NavController,
-    viewModel: JobDetailsViewModel
+    viewModel: JobDetailsViewModel = koinViewModel(),
 ) {
     val vacancyState = viewModel.vacancyState.collectAsState().value
     val favoriteState = viewModel.favoriteState.collectAsState().value
@@ -211,7 +212,9 @@ private fun VacancyCard(vacancy: Vacancy) {
             containerColor = LightGray,
             contentColor = NeutralDark,
         ),
-        modifier = Modifier.fillMaxWidth().padding(vertical = PaddingBase)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = PaddingBase)
     ) {
         Row(
             modifier = Modifier

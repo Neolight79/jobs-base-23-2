@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.util.mappers
 
+import android.content.Context
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.dto.ContactsDto
 import ru.practicum.android.diploma.data.dto.SalaryDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailDto
@@ -12,7 +14,8 @@ import java.util.Locale
 
 class VacancyMapper(
     private val filterAreaMapper: FilterAreaMapper,
-    private val filterIndustryMapper: FilterIndustryMapper
+    private val filterIndustryMapper: FilterIndustryMapper,
+    private val context: Context,
 ) {
 
     fun map(dto: VacancyDetailDto): Vacancy = Vacancy(
@@ -20,7 +23,7 @@ class VacancyMapper(
         name = dto.name.orEmpty(),
         description = dto.description.orEmpty(),
         salary = dto.salary.toDomain(),
-        city = if (dto.address?.city != null) dto.address.city else dto.area?.name.orEmpty(),
+        city = dto.address?.city ?: dto.area?.name.orEmpty(),
         address = if (dto.address?.raw != null) dto.address.raw else dto.area?.name.orEmpty(),
         experience = dto.experience?.name.orEmpty(),
         conditions = getConditions(dto.employment?.name, dto.schedule?.name),
@@ -51,22 +54,27 @@ class VacancyMapper(
         )
     }
 
-    private fun SalaryDto?.toDomain(): String = this?.let {
-        @Suppress("DEPRECATION")
-        val numberFormat = NumberFormat.getNumberInstance(Locale("ru"))
+    private fun SalaryDto?.toDomain(): String {
+        if (this == null) return ""
 
-        var salaryString = ""
-        if (it.from != null) salaryString += "от ${numberFormat.format(it.from)} "
-        if (it.to != null) salaryString += "до ${numberFormat.format(it.to)} "
-
-        if (salaryString.isNotEmpty()) {
-            if (!it.currency.isNullOrEmpty()) salaryString += getCurrencySymbol(it.currency)
-        } else {
-            salaryString = "Уровень зарплаты не указан"
+        val numberFormat = NumberFormat.getNumberInstance(Locale("ru", "RU")).apply {
+            isGroupingUsed = true
         }
 
-        salaryString
-    } ?: ""
+        val sb = StringBuilder()
+        from?.let { sb.append("от ").append(numberFormat.format(it)).append(' ') }
+        to?.let { sb.append("до ").append(numberFormat.format(it)).append(' ') }
+
+        return if (sb.isNotEmpty()) {
+            currency?.takeIf { it.isNotBlank() }?.let {
+                if (sb.last() != ' ') sb.append(' ')
+                sb.append(getCurrencySymbol(it))
+            }
+            sb.toString().trim()
+        } else {
+            context.getString(R.string.salary_not_specified)
+        }
+    }
 
     private fun getCurrencySymbol(currencyCode: String): String {
         return when (currencyCode) {
