@@ -35,24 +35,24 @@ class VacanciesInteractorImpl(
         isLoading = true
         try {
             val requestOptions = mutableMapOf<String, String>()
-            area?.let { requestOptions["area"] = it }
-            industry?.let { requestOptions["industry"] = it }
-            text?.let { requestOptions["text"] = it }
-            salary?.let { requestOptions["salary"] = it.toString() }
-            requestOptions["only_with_salary"] = onlyWithSalary.toString()
-            requestOptions["page"] = page.toString()
+            area?.let { requestOptions[PARAM_AREA] = it }
+            industry?.let { requestOptions[PARAM_INDUSTRY] = it }
+            text?.let { requestOptions[PARAM_TEXT] = it }
+            salary?.let { requestOptions[PARAM_SALARY] = it.toString() }
+            requestOptions[PARAM_ONLY_WITH_SALARY] = onlyWithSalary.toString()
+            requestOptions[PARAM_PAGE] = page.toString()
 
             val saved = filterInteractor.getFilterParameters()
-            if (!requestOptions.containsKey("area")) {
-                saved.area?.id?.let { requestOptions["area"] = it.toString() }
+            if (!requestOptions.containsKey(PARAM_AREA)) {
+                saved.area?.id?.let { requestOptions[PARAM_AREA] = it.toString() }
             }
-            if (!requestOptions.containsKey("industry")) {
-                saved.industry?.id?.let { requestOptions["industry"] = it.toString() }
+            if (!requestOptions.containsKey(PARAM_INDUSTRY)) {
+                saved.industry?.id?.let { requestOptions[PARAM_INDUSTRY] = it.toString() }
             }
-            if (!requestOptions.containsKey("salary")) {
-                saved.salary?.let { requestOptions["salary"] = it.toString() }
+            if (!requestOptions.containsKey(PARAM_SALARY)) {
+                saved.salary?.let { requestOptions[PARAM_SALARY] = it.toString() }
             }
-            requestOptions["only_with_salary"] = (onlyWithSalary || saved.onlyWithSalary).toString()
+            requestOptions[PARAM_ONLY_WITH_SALARY] = (onlyWithSalary || saved.onlyWithSalary).toString()
 
             val request = Request(options = requestOptions)
             val response = networkClient.getVacancies(request)
@@ -98,4 +98,12 @@ class VacanciesInteractorImpl(
         }
     }
 
+    companion object {
+        private const val PARAM_AREA = "area"
+        private const val PARAM_INDUSTRY = "industry"
+        private const val PARAM_TEXT = "text"
+        private const val PARAM_SALARY = "salary"
+        private const val PARAM_ONLY_WITH_SALARY = "only_with_salary"
+        private const val PARAM_PAGE = "page"
+    }
 }
