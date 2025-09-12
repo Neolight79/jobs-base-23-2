@@ -1,8 +1,7 @@
 package ru.practicum.android.diploma.data
 
 import ru.practicum.android.diploma.data.dto.Request
-import ru.practicum.android.diploma.data.dto.VacanciesResponse
-import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
+import ru.practicum.android.diploma.data.dto.Response
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.domain.api.VacanciesRepository
 
@@ -17,7 +16,7 @@ class VacanciesRepositoryImpl(
         salary: Int?,
         page: Int,
         onlyWithSalary: Boolean?
-    ): VacanciesResponse {
+    ): Response {
         val options = mutableMapOf<String, String>().apply {
             area?.let { put("area", it.toString()) }
             industry?.let { put("industry", it.toString()) }
@@ -27,15 +26,10 @@ class VacanciesRepositoryImpl(
             onlyWithSalary?.let { put("only_with_salary", it.toString()) }
         }
 
-        val response = networkClient.getVacancies(Request(options))
-        return response as VacanciesResponse
+        return networkClient.getVacancies(Request(options))
     }
 
-    override suspend fun getVacancyById(id: String): VacancyDetailResponse {
-        val response = networkClient.getVacancyById(Request(mapOf("id" to id)))
-        return when (response) {
-            is VacancyDetailResponse -> response
-            else -> error("Unexpected response type for getVacancyById: ${response::class.simpleName}")
-        }
+    override suspend fun getVacancyById(id: String): Response {
+        return networkClient.getVacancyById(Request(mapOf("id" to id)))
     }
 }
