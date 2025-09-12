@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.data
 
+import ru.practicum.android.diploma.data.dto.FilterAreaDto
+import ru.practicum.android.diploma.data.dto.FilterIndustryDto
 import ru.practicum.android.diploma.data.dto.FilterParametersDto
 import ru.practicum.android.diploma.domain.api.FilterParametersRepository
 import ru.practicum.android.diploma.domain.models.FilterParameters
@@ -11,7 +13,12 @@ class FilterParametersRepositoryImpl(
 ) : FilterParametersRepository {
 
     override fun saveFilterParameters(filterParameters: FilterParameters) {
-        sharedStorage.putData(filterParametersMapper.map(filterParameters))
+        val dto = filterParametersMapper.map(filterParameters)
+        val idOnlyDto = dto.copy(
+            area = dto.area?.let { FilterAreaDto(id = it.id, name = null, parentId = null, areas = null) },
+            industry = dto.industry?.let { FilterIndustryDto(id = it.id, name = null) }
+        )
+        sharedStorage.putData(idOnlyDto)
     }
 
     override fun getFilterParameters(): FilterParameters {

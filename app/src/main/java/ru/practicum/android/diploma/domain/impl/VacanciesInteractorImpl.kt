@@ -7,6 +7,7 @@ import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_NOT_FOUND_404
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_OK_200
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_SERVICE_UNAVAILABLE_503
+import ru.practicum.android.diploma.domain.api.FilterParametersInteractor
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
 import ru.practicum.android.diploma.domain.models.VacanciesPage
@@ -15,7 +16,8 @@ import ru.practicum.android.diploma.util.mappers.VacancyMapper
 
 class VacanciesInteractorImpl(
     private val networkClient: NetworkClient,
-    private val vacancyMapper: VacancyMapper
+    private val vacancyMapper: VacancyMapper,
+    private val filterInteractor: FilterParametersInteractor
 ) : VacanciesInteractor {
 
     private var currentPage = 1
@@ -42,6 +44,18 @@ class VacanciesInteractorImpl(
 
             val request = Request(options = requestOptions)
             val response = networkClient.getVacancies(request)
+            val saved = filterInteractor.getFilterParameters()
+
+            if (!requestOptions.containsKey("area")) {
+                saved.area?.id?.let { requestOptions["area"] = it.toString() }
+            }
+            if (!requestOptions.containsKey("industry")) {
+                saved.industry?.id?.let { requestOptions["industry"] = it.toString() }
+            }
+            if (!requestOptions.containsKey("salary")) {
+                saved.salary?.let { requestOptions["salary"] = it.toString() }
+            }
+            requestOptions["only_with_salary"] = (onlyWithSalary || saved.onlyWithSalary).toString()
 
             return if (response.resultCode == HTTP_OK_200 && response is VacanciesResponse) {
                 totalPages = response.pages
