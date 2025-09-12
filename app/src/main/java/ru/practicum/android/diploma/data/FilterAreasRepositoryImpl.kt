@@ -13,7 +13,7 @@ class FilterAreasRepositoryImpl(
 ) : FilterAreasRepository {
 
     override suspend fun getFilterAreas(): List<FilterArea>? {
-        val response = networkClient.getAreas(null)
+        val response = networkClient.getAreas()
         if (response.resultCode != HTTP_OK_200) return null
         return (response as FilterAreaResponse).results.map {
             filterAreaMapper.map(it)

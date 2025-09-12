@@ -7,6 +7,9 @@ interface FilterAreasInteractor {
 
     suspend fun getFilterAreasCountries(): Pair<List<FilterArea>?, SearchResultStatus>
 
-    suspend fun getFilterAreasFiltered(query: String?): Pair<List<FilterArea>?, SearchResultStatus>
+    suspend fun getFilterAreasFiltered(
+        parentId: Int? = null,
+        query: String? = null
+    ): Pair<List<FilterArea>?, SearchResultStatus>
 
 }

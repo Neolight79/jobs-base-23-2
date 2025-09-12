@@ -13,22 +13,34 @@ class FilterAreasInteractorImpl(
         val filterAreas = filterAreasRepository.getFilterAreas()
         return when {
             (filterAreas == null) -> Pair(null, SearchResultStatus.ServerError)
-            else -> Pair(filterAreas.filter { it.parentId == null }, SearchResultStatus.Success)
+            else -> Pair(
+                filterAreas.filter { it.parentId == null }
+                .map { (id, name, parentId, areas) -> FilterArea(id, name, parentId, listOf()) },
+                SearchResultStatus.Success
+            )
         }
     }
 
-    override suspend fun getFilterAreasFiltered(query: String?): Pair<List<FilterArea>?, SearchResultStatus> {
+    override suspend fun getFilterAreasFiltered(parentId: Int?, query: String?): Pair<List<FilterArea>?, SearchResultStatus> {
         val filterAreas = filterAreasRepository.getFilterAreas()
+        if (filterAreas == null) return Pair(null, SearchResultStatus.ServerError)
+        val areas = mutableListOf<FilterArea>()
+        filterAreas.forEach { parent -> parent.areas?.let { areas += it } }
         return when {
-            (filterAreas == null) -> Pair(null, SearchResultStatus.ServerError)
-            query.isNullOrEmpty() -> Pair(
-                filterAreas.filter { it.parentId != null }, SearchResultStatus.Success
-            )
-            else -> Pair(
-                filterAreas.filter { it.parentId != null &&
+            parentId != null && !query.isNullOrEmpty() -> Pair(
+                areas.filter { it.parentId == parentId &&
                     it.name?.contains(query, ignoreCase = true) == true },
                 SearchResultStatus.Success
             )
+            parentId != null && query.isNullOrEmpty() -> Pair(
+                areas.filter { it.parentId == parentId },
+                SearchResultStatus.Success
+            )
+            parentId == null && !query.isNullOrEmpty() -> Pair(
+                areas.filter { it.name?.contains(query, ignoreCase = true) == true },
+                SearchResultStatus.Success
+            )
+            else -> Pair(areas, SearchResultStatus.Success)
         }
     }
 }
