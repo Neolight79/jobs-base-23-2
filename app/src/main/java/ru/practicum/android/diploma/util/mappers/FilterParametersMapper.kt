@@ -25,5 +25,11 @@ class FilterParametersMapper(
             onlyWithSalary = filterParametersDto.onlyWithSalary,
         )
     }
-
+    fun toStorageDto(filterParameters: FilterParameters): FilterParametersDto {
+        val dto = map(filterParameters)
+        return dto.copy(
+            area = dto.area?.copy(areas = null),
+            industry = dto.industry
+        )
+    }
 }

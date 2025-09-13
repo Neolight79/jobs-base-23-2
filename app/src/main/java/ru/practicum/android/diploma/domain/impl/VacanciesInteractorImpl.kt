@@ -5,6 +5,7 @@ import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_NOT_FOUND_404
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_OK_200
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.HTTP_SERVICE_UNAVAILABLE_503
+import ru.practicum.android.diploma.domain.api.FilterParametersInteractor
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
 import ru.practicum.android.diploma.domain.api.VacanciesRepository
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
@@ -14,7 +15,8 @@ import ru.practicum.android.diploma.util.mappers.VacancyMapper
 
 class VacanciesInteractorImpl(
     private val repository: VacanciesRepository,
-    private val vacancyMapper: VacancyMapper
+    private val vacancyMapper: VacancyMapper,
+    private val filterInteractor: FilterParametersInteractor
 ) : VacanciesInteractor {
 
     private var currentPage = 1
@@ -31,15 +33,23 @@ class VacanciesInteractorImpl(
     ): Pair<VacanciesPage?, SearchResultStatus> {
         isLoading = true
         try {
+            val saved = filterInteractor.getFilterParameters()
+
+            val area: Int? =
+                (area ?: saved.area?.id?.toString())?.toIntOrNull()
+            val industry: Int? =
+                (industry ?: saved.industry?.id?.toString())?.toIntOrNull()
+            val salary: Int? = salary ?: saved.salary
+            val onlyWithSalary: Boolean = onlyWithSalary || saved.onlyWithSalary
+
             val response = repository.getVacancies(
-                area?.toIntOrNull(),
-                industry?.toIntOrNull(),
+                area,
+                industry,
                 text,
                 salary,
                 page,
                 onlyWithSalary
             )
-
             return when {
                 response.resultCode == HTTP_OK_200 && response is VacanciesResponse -> {
                     totalPages = response.pages
@@ -85,4 +95,3 @@ class VacanciesInteractorImpl(
         }
     }
 }
-
