@@ -109,9 +109,11 @@ fun MainScreen(
     val filtersSetResult = navController.currentBackStackEntry?.savedStateHandle
         ?.getLiveData<Boolean>("repeatSearch")?.observeAsState()
 
-    filtersSetResult?.value?.let {
-        navController.currentBackStackEntry?.savedStateHandle?.remove<Boolean>("repeatSearch")
-        viewModel.searchDirectly()
+    LaunchedEffect(filtersSetResult) {
+        filtersSetResult?.value?.let {
+            navController.currentBackStackEntry?.savedStateHandle?.remove<Boolean>("repeatSearch")
+            viewModel.searchDirectly()
+        }
     }
 
     // При возвращении на экран проверяем, возможно включились или выключились фильтры
