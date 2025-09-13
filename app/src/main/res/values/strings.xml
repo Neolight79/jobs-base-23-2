@@ -33,4 +33,11 @@
     <string name="title_favorites">Favorites</string>
     <string name="empty_list">List is empty</string>
     <string name="salary_not_specified">Salary level is not specified</string>
+    <string name="job_location">Job location</string>
+    <string name="industry">Industry</string>
+    <string name="expected_salary">Expected salary</string>
+    <string name="do_not_show_wo_sallary">Exclude vacancies without sallary</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="reset">Reset</string>
 </resources>

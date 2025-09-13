@@ -40,3 +40,6 @@ val ProgressItemHeight = 80.dp
 val ItemListImageSpaceWidth = 60.dp
 val LogoSize = 48.dp
 val LineHeightRegularDp = 19.dp
+val SettingsRowHeight = 60.dp
+val SalaryRowHeight = 68.dp
+val SalaryFieldHeight = 52.dp

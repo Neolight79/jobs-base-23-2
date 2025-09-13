@@ -39,6 +39,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -103,6 +104,15 @@ fun MainScreen(
 
     // Отслеживаем признак активных фильтров для поиска
     val filtersEnabled = viewModel.filtersEnabledState.collectAsState().value
+
+    // Отслеживаем возврат команды с экрана настройки фильтров для повторного поиска
+    val filtersSetResult = navController.currentBackStackEntry?.savedStateHandle
+        ?.getLiveData<Boolean>("repeatSearch")?.observeAsState()
+
+    filtersSetResult?.value?.let {
+        navController.currentBackStackEntry?.savedStateHandle?.remove<Boolean>("repeatSearch")
+        viewModel.searchDirectly()
+    }
 
     // При возвращении на экран проверяем, возможно включились или выключились фильтры
     LifecycleResumeEffect(Unit) {
