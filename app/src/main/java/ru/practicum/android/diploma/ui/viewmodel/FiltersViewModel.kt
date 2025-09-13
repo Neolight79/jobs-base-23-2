@@ -8,21 +8,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.domain.api.FilterParametersInteractor
 import ru.practicum.android.diploma.domain.models.FiltersState
 
-class FiltersViewModel : ViewModel() {
+class FiltersViewModel(
+    private val filtersInteractor: FilterParametersInteractor
+) : ViewModel() {
 
-    // Моковый объект для эмуляции работы с интерактором
-    private var stateFromSharedPrefs = FiltersState(
-        areFiltersSet = true,
-        location = "Россия, Москва",
-        industry = "Деревообработка",
-        salary = "",
-        doNotShowWithoutSalary = false
-    )
+    // Переменная текущих настроек
+    private var currentFilters = filtersInteractor.getFilterParameters()
 
     // StateFlow для состояния экрана настройки фильтров
-    private val _filtersState = MutableStateFlow<FiltersState>(stateFromSharedPrefs)
+    private val _filtersState = MutableStateFlow<FiltersState>(getFiltersState())
     val filtersState: StateFlow<FiltersState> = _filtersState.asStateFlow()
 
     // StateFlow для сокрытия клавиатуры
@@ -31,13 +28,8 @@ class FiltersViewModel : ViewModel() {
 
     // region Публичные методы
     fun loadFilters() {
-        renderState(stateFromSharedPrefs)
-
-//        viewModelScope.launch {
-//            favoritesInteractor.getFavoriteVacancies().collect { vacancies ->
-//                processResult(vacancies, true)
-//            }
-//        }
+        currentFilters = filtersInteractor.getFilterParameters()
+        _filtersState.value = getFiltersState()
     }
 
     fun hideKeyboard() {
@@ -47,77 +39,52 @@ class FiltersViewModel : ViewModel() {
     }
 
     fun clearLocation() {
-        // ToDo Очищаем запись о месте работы в фильтрах в хранилище
-        stateFromSharedPrefs = stateFromSharedPrefs.copy(
-            location = "",
-            areFiltersSet = stateFromSharedPrefs.doNotShowWithoutSalary
-                || stateFromSharedPrefs.industry.isNotEmpty()
-                || stateFromSharedPrefs.salary.isNotEmpty()
-        )
-        loadFilters()
+        currentFilters = currentFilters.copy(area = null)
+        saveAndRenderState()
     }
 
     fun clearIndustry() {
-        // ToDo Очищаем запись об отрасли в фильтрах в хранилище
-        stateFromSharedPrefs = stateFromSharedPrefs.copy(
-            industry = "",
-            areFiltersSet = stateFromSharedPrefs.doNotShowWithoutSalary
-                || stateFromSharedPrefs.location.isNotEmpty()
-                || stateFromSharedPrefs.salary.isNotEmpty()
-        )
-        loadFilters()
+        currentFilters = currentFilters.copy(industry = null)
+        saveAndRenderState()
     }
 
     fun toggleDoNotShowWithoutSalary(isChecked: Boolean) {
-        // ToDo Переключаем флаг показа только вакансий с зарплатами
-        stateFromSharedPrefs = stateFromSharedPrefs.copy(
-            doNotShowWithoutSalary = isChecked,
-            areFiltersSet = isChecked
-                || stateFromSharedPrefs.location.isNotEmpty()
-                || stateFromSharedPrefs.industry.isNotEmpty()
-                || stateFromSharedPrefs.salary.isNotEmpty()
-        )
-        loadFilters()
+        currentFilters = currentFilters.copy(onlyWithSalary = isChecked)
+        saveAndRenderState()
     }
 
     fun resetFilters() {
-        // ToDo Сбрасываем все фильтры
-        stateFromSharedPrefs = FiltersState(
-            areFiltersSet = false,
-            location = "",
-            industry = "",
-            salary = "",
-            doNotShowWithoutSalary = false
+        currentFilters = currentFilters.copy(
+            area = null,
+            industry = null,
+            salary = null,
+            onlyWithSalary = false
         )
-        loadFilters()
+        saveAndRenderState()
     }
 
     fun saveSalary(salaryText: String) {
-        // ToDo Сохраняем новое значение желаемой зарплаты для фильтрации
-        stateFromSharedPrefs = stateFromSharedPrefs.copy(
-            salary = salaryText,
-            areFiltersSet = stateFromSharedPrefs.doNotShowWithoutSalary
-                || stateFromSharedPrefs.location.isNotEmpty()
-                || stateFromSharedPrefs.industry.isNotEmpty()
-                || salaryText.isNotEmpty()
+        currentFilters = currentFilters.copy(
+            salary = if (salaryText.isEmpty()) null else salaryText.toInt()
         )
-        loadFilters()
+        saveAndRenderState()
     }
     // endregion
 
     // region Приватные методы
-//    private fun processResult(favoriteVacancies: List<Vacancy>?, isSuccess: Boolean) {
-//        if (isSuccess && favoriteVacancies.isNullOrEmpty()) {
-//            renderState(FavoritesState.EmptyList)
-//        } else if (!isSuccess) {
-//            renderState(FavoritesState.ErrorState)
-//        } else {
-//            renderState(FavoritesState.FavoriteVacancies(favoriteVacancies.orEmpty()))
-//        }
-//    }
+    private fun getFiltersState(): FiltersState {
+        return FiltersState(
+            areFiltersSet = filtersInteractor.isFilterEnabled(),
+            location = currentFilters.area?.name.orEmpty(),
+            industry = currentFilters.industry?.name.orEmpty(),
+            salary = if (currentFilters.salary == null) "" else currentFilters.salary.toString(),
+            doNotShowWithoutSalary = currentFilters.onlyWithSalary
+        )
+    }
 
-    private fun renderState(state: FiltersState) {
-        _filtersState.value = state
+    private fun saveAndRenderState() {
+        filtersInteractor.saveFilterParameters(currentFilters)
+        _filtersState.value = getFiltersState()
     }
     // endregion
 

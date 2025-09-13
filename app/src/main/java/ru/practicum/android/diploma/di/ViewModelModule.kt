@@ -17,7 +17,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        FiltersViewModel()
+        FiltersViewModel(get())
     }
 
     viewModel { params ->
