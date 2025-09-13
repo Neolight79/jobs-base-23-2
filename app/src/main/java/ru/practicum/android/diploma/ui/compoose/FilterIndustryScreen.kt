@@ -38,7 +38,7 @@ fun FilterIndustryScreen(
             TestButton("Назад") {
                 navController.navigateUp()
             }
-            RadiobuttonRow(15, "Автокомпоненты, запчасти, шины (продвеждение, оптовая торговля)", true) { }
+            RadiobuttonRow(0, "Автокомпоненты, запчасти, шины (продвеждение, оптовая торговля)", true) { }
         }
     }
 }
