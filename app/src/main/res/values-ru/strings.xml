@@ -36,4 +36,11 @@
     <string name="title_favorites">Избранное</string>
     <string name="empty_list">Список пуст</string>
     <string name="salary_not_specified">Уровень зарплаты не указан</string>
+    <string name="job_location">Место работы</string>
+    <string name="industry">Отрасль</string>
+    <string name="expected_salary">Ожидаемая зарплата</string>
+    <string name="do_not_show_wo_sallary">Не показывать без зарплаты</string>
+    <string name="confirm">Применить</string>
+    <string name="cancel">Отмена</string>
+    <string name="reset">Сбросить</string>
 </resources>
