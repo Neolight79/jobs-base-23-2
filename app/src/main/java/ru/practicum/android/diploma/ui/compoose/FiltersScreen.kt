@@ -102,7 +102,7 @@ fun FiltersScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Сверху выводим заголовок с кнопкой назад
-        FiltersTopBar {
+        FiltersTopBar(stringResource(R.string.title_filters)) {
             viewModel.hideKeyboard()
             navController.navigateUp()
         }
@@ -160,7 +160,7 @@ fun FiltersScreen(
 }
 
 @Composable
-fun FiltersTopBar(onBackClick: () -> Unit) {
+fun FiltersTopBar(title: String, onBackClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -190,7 +190,7 @@ fun FiltersTopBar(onBackClick: () -> Unit) {
                 .padding(ZeroSize)
                 .weight(WEIGHT_1F)
         ) {
-            TitleText(stringResource(R.string.title_filters))
+            TitleText(title)
         }
     }
 }

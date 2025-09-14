@@ -41,4 +41,15 @@
     <string name="cancel">Cancel</string>
     <string name="reset">Reset</string>
     <string name="enter_amount">Enter amount</string>
+    <string name="select_job_location">Select job location</string>
+    <string name="country">Country</string>
+    <string name="region">Region</string>
+    <string name="approve">Approve</string>
+    <string name="country_selection">Country selection</string>
+    <string name="region_selection">Region selection</string>
+    <string name="enter_region">Enter region</string>
+    <string name="region_not_found">Region not found</string>
+    <string name="region_list_error">Regions unavailable</string>
+    <string name="industry_selection">Industry selection</string>
+    <string name="industry_not_found">Industry not found</string>
 </resources>

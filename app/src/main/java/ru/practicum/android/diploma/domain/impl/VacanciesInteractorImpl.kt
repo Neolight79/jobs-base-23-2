@@ -34,9 +34,13 @@ class VacanciesInteractorImpl(
         isLoading = true
         try {
             val saved = filterInteractor.getFilterParameters()
+            val areaId = if (saved.area != null) {
+                saved.area.regionId ?: saved.area.countryId
+            } else {
+                null
+            }
 
-            val area: Int? =
-                (area ?: saved.area?.id?.toString())?.toIntOrNull()
+            val area: Int? = if (area != null) area.toIntOrNull() else areaId
             val industry: Int? =
                 (industry ?: saved.industry?.id?.toString())?.toIntOrNull()
             val salary: Int? = salary ?: saved.salary
