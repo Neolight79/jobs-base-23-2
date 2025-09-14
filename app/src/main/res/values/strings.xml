@@ -40,4 +40,5 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="reset">Reset</string>
+    <string name="enter_amount">Enter amount</string>
 </resources>
