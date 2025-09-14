@@ -126,11 +126,11 @@ fun CountryListItem(title: String, onClick: () -> Unit) {
                 .width(SettingsRowHeight),
             contentAlignment = Alignment.Center
         ) {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_forward),
-                    contentDescription = title,
-                    modifier = Modifier.size(ArrowBackHeight)
-                )
+            Icon(
+                painter = painterResource(R.drawable.arrow_forward),
+                contentDescription = title,
+                modifier = Modifier.size(ArrowBackHeight)
+            )
         }
     }
 }

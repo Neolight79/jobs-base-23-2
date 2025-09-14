@@ -110,7 +110,7 @@ fun FilterIndustryScreen(
                 stringResource(R.string.region_list_error)
             )
             is IndustriesState.Industries -> {
-                isIndustrySelected = (industryState.selectedItem != null) || isIndustrySelected
+                isIndustrySelected = industryState.selectedItem != null || isIndustrySelected
                 IndustriesList(
                     modifier = Modifier.fillMaxSize().weight(WEIGHT_1F),
                     selectedIndex = industryState.selectedItem?.id,
@@ -247,7 +247,7 @@ fun IndustriesList(
             RadioButtonItem(
                 id = industry.id,
                 title = industry.name.orEmpty(),
-                selected = (newSelectedIndex.value == industry.id),
+                selected = newSelectedIndex.value == industry.id,
                 onSelect = {
                     newSelectedIndex.value = industry.id
                     onItemSelect(industry)
@@ -272,7 +272,7 @@ fun RadioButtonItem(
                 selected = selected,
                 onClick = {
                     onSelect(id)
-                          },
+                },
                 role = Role.RadioButton
             ),
         verticalAlignment = Alignment.CenterVertically

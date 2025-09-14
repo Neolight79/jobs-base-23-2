@@ -79,7 +79,7 @@ class FilterLocationViewModel(
             )
         } else {
             FilterLocationState(
-                isDataSelected = (currentFilters.area?.countryId != null),
+                isDataSelected = currentFilters.area?.countryId != null,
                 countryId = currentFilters.area?.countryId,
                 countryName = currentFilters.area?.countryName.orEmpty(),
                 region = currentFilters.area?.regionName.orEmpty()
