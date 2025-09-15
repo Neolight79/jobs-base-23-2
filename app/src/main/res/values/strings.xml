@@ -52,4 +52,5 @@
     <string name="region_list_error">Regions unavailable</string>
     <string name="industry_selection">Industry selection</string>
     <string name="industry_not_found">Industry not found</string>
+    <string name="enter_industry">Enter industry</string>
 </resources>

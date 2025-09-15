@@ -191,19 +191,19 @@ fun IndustryFilterField(viewModel: FilterIndustryViewModel) {
                                     .clickable(onClick = { viewModel.clearSearch() }),
                                 tint = NeutralDark,
                                 imageVector = Icons.Outlined.Close,
-                                contentDescription = stringResource(R.string.region_selection)
+                                contentDescription = stringResource(R.string.industry_selection)
                             )
                             false -> Icon(
                                 tint = NeutralDark,
                                 imageVector = Icons.Outlined.Search,
-                                contentDescription = stringResource(R.string.region_selection)
+                                contentDescription = stringResource(R.string.industry_selection)
                             )
                         }
                     },
                     interactionSource = interactionSource,
                     contentPadding = PaddingValues(start = PaddingBase),
                     placeholder = { Text(
-                        text = stringResource(R.string.enter_region),
+                        text = stringResource(R.string.enter_industry),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyLarge,
                     ) },
