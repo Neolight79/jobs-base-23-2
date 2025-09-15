@@ -8,6 +8,6 @@ sealed interface RegionsState {
 
     data object EmptyResult : RegionsState
 
-    data class Regions(val regions: List<Location>) : RegionsState
+    data class Regions(val regions: List<CountryAndRegion>) : RegionsState
 
 }

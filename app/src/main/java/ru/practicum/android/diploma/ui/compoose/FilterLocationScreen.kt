@@ -16,6 +16,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.koin.androidx.compose.koinViewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.domain.models.CountryAndRegion
 import ru.practicum.android.diploma.domain.models.Location
 import ru.practicum.android.diploma.ui.theme.PaddingBase
 import ru.practicum.android.diploma.ui.theme.PaddingSmall
@@ -49,7 +50,7 @@ fun FilterLocationScreen(
     LaunchedEffect(regionResult) {
         regionResult?.value?.let {
             navController.currentBackStackEntry?.savedStateHandle?.remove<String>("selectedRegion")
-            viewModel.updateRegion(Gson().fromJson(it, object : TypeToken<Location>() {}.type))
+            viewModel.updateRegion(Gson().fromJson(it, object : TypeToken<CountryAndRegion>() {}.type))
         }
     }
 

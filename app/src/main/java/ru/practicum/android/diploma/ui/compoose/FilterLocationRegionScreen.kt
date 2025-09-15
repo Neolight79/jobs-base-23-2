@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -39,6 +42,7 @@ import androidx.navigation.NavController
 import com.google.gson.Gson
 import org.koin.androidx.compose.koinViewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.domain.models.CountryAndRegion
 import ru.practicum.android.diploma.domain.models.PlaceholderImages
 import ru.practicum.android.diploma.domain.models.RegionsState
 import ru.practicum.android.diploma.ui.theme.Blue
@@ -89,8 +93,8 @@ fun FilterLocationRegionScreen(
                 PlaceholderImages.JobDetailsServerError,
                 stringResource(R.string.region_list_error)
             )
-            is RegionsState.Regions -> LocationsList(
-                foundLocationsList = regionsState.regions,
+            is RegionsState.Regions -> RegionsList(
+                foundRegionsList = regionsState.regions,
                 onItemClick = { region ->
                     navController.previousBackStackEntry
                         ?.savedStateHandle
@@ -98,6 +102,25 @@ fun FilterLocationRegionScreen(
                     navController.popBackStack()
                 }
             )
+        }
+    }
+}
+
+@Composable
+fun RegionsList(
+    foundRegionsList: List<CountryAndRegion>,
+    onItemClick: (region: CountryAndRegion) -> Unit
+) {
+    val listState = rememberLazyListState()
+
+    LazyColumn(
+        Modifier.fillMaxSize(),
+        state = listState
+    ) {
+        items(foundRegionsList) { region ->
+            CountryListItem(region.regionName.orEmpty()) {
+                onItemClick(region)
+            }
         }
     }
 }

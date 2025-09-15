@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.domain.api
 
+import ru.practicum.android.diploma.domain.models.CountryAndRegion
 import ru.practicum.android.diploma.domain.models.Location
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
 
@@ -10,6 +11,6 @@ interface FilterAreasInteractor {
     suspend fun getFilterAreasFiltered(
         parentId: Int? = null,
         query: String? = null
-    ): Pair<List<Location>?, SearchResultStatus>
+    ): Pair<List<CountryAndRegion>?, SearchResultStatus>
 
 }
