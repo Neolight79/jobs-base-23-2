@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.FilterAreasInteractor
-import ru.practicum.android.diploma.domain.models.Location
+import ru.practicum.android.diploma.domain.models.CountryAndRegion
 import ru.practicum.android.diploma.domain.models.RegionsState
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
 
@@ -62,7 +62,7 @@ class FilterLocationRegionViewModel(
         search()
     }
 
-    private fun processResult(foundRegions: List<Location>?, searchStatus: SearchResultStatus) {
+    private fun processResult(foundRegions: List<CountryAndRegion>?, searchStatus: SearchResultStatus) {
         when (searchStatus) {
             SearchResultStatus.Success -> {
                 if (foundRegions == null) {

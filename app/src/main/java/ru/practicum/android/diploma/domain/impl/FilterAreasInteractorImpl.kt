@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.domain.impl
 
 import ru.practicum.android.diploma.domain.api.FilterAreasInteractor
 import ru.practicum.android.diploma.domain.api.FilterAreasRepository
+import ru.practicum.android.diploma.domain.models.CountryAndRegion
 import ru.practicum.android.diploma.domain.models.FilterArea
 import ru.practicum.android.diploma.domain.models.Location
 import ru.practicum.android.diploma.domain.models.SearchResultStatus
@@ -27,30 +28,37 @@ class FilterAreasInteractorImpl(
     override suspend fun getFilterAreasFiltered(
         parentId: Int?,
         query: String?
-    ): Pair<List<Location>?, SearchResultStatus> {
-        if (filterAreas.isEmpty()) {
-            filterAreas = filterAreasRepository.getFilterAreas().orEmpty()
+    ): Pair<List<CountryAndRegion>?, SearchResultStatus> {
+        if (filterAreas.isEmpty()) filterAreas = filterAreasRepository.getFilterAreas().orEmpty()
+        if (filterAreas.isEmpty()) return Pair(null, SearchResultStatus.ServerError)
+        val areas = mutableListOf<FilterArea>()
+        filterAreas.forEach { parent -> parent.areas?.let { areas += it } }
+        val locations = when {
+            parentId != null && !query.isNullOrEmpty() ->
+                mapToLocations(
+                    areas.filter { it.parentId == parentId &&
+                        it.name?.contains(query, ignoreCase = true) == true }
+                )
+            parentId != null && query.isNullOrEmpty() ->
+                mapToLocations(
+                    areas.filter { it.parentId == parentId }
+                )
+            parentId == null && !query.isNullOrEmpty() ->
+                mapToLocations(
+                    areas.filter { it.name?.contains(query, ignoreCase = true) == true }
+                )
+            else -> mapToLocations(areas)
         }
-        if (filterAreas.isEmpty()) {
-            return null to SearchResultStatus.ServerError
-        }
-
-        val areas = filterAreas.flatMap { it.areas.orEmpty() }
-
-        val filtered = areas
-            .asSequence()
-            .filter { parentId == null || it.parentId == parentId }
-            .filter { query.isNullOrBlank() || it.name?.contains(query, ignoreCase = true) == true }
-            .toList()
-
-        return mapToLocations(filtered) to SearchResultStatus.Success
+        return Pair(locations, SearchResultStatus.Success)
     }
 
-    private fun mapToLocations(areas: List<FilterArea>): List<Location> {
-        return areas.map {
-            Location(
-                id = it.id,
-                name = it.name.orEmpty()
+    private fun mapToLocations(areas: List<FilterArea>): List<CountryAndRegion> {
+        return areas.map { region ->
+            CountryAndRegion(
+                countryId = filterAreas.first { it.id == region.parentId }.id,
+                countryName = filterAreas.first { it.id == region.parentId }.name,
+                regionId = region.id,
+                regionName = region.name.orEmpty()
             )
         }
     }

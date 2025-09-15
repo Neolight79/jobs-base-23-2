@@ -51,14 +51,9 @@ class FilterLocationViewModel(
         _filterLocationState.value = getFilterLocationState()
     }
 
-    fun updateRegion(region: Location) {
+    fun updateRegion(region: CountryAndRegion) {
         currentFilters = currentFilters.copy(
-            area = CountryAndRegion(
-                countryId = currentFilters.area?.countryId,
-                countryName = currentFilters.area?.countryName,
-                regionId = region.id,
-                regionName = region.name
-            )
+            area = region
         )
         _filterLocationState.value = getFilterLocationState()
     }
