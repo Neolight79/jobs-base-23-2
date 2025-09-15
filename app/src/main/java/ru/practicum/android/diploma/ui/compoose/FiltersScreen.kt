@@ -86,9 +86,13 @@ fun FiltersScreen(
     // Отслеживаем основной объект состояний экрана настройки фильтров
     val filtersState = viewModel.filtersState.collectAsState().value
 
+    // Признак показа кнопок внизу экрана
+    val showBottomButtons = remember { mutableStateOf(filtersState.areFiltersSet) }
+
     // При возвращении на экран загружаем заново настройки фильтров
     LifecycleResumeEffect(Unit) {
         viewModel.loadFilters()
+        showBottomButtons.value = filtersState.areFiltersSet
         onPauseOrDispose { }
     }
 
@@ -98,7 +102,7 @@ fun FiltersScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Сверху выводим заголовок с кнопкой назад
-        FiltersTopBar {
+        FiltersTopBar(stringResource(R.string.title_filters)) {
             viewModel.hideKeyboard()
             navController.navigateUp()
         }
@@ -136,7 +140,7 @@ fun FiltersScreen(
             viewModel.toggleDoNotShowWithoutSalary(isSelected)
         }
         Spacer(modifier = Modifier.weight(WEIGHT_1F))
-        if (filtersState.areFiltersSet) {
+        if (showBottomButtons.value || filtersState.areFiltersSet) {
             // Далее выводим кнопку применения настроек фильтрации и выполнения повторного поиска
             ConfirmButton(stringResource(R.string.confirm)) {
                 navController.previousBackStackEntry
@@ -156,7 +160,7 @@ fun FiltersScreen(
 }
 
 @Composable
-fun FiltersTopBar(onBackClick: () -> Unit) {
+fun FiltersTopBar(title: String, onBackClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -186,7 +190,7 @@ fun FiltersTopBar(onBackClick: () -> Unit) {
                 .padding(ZeroSize)
                 .weight(WEIGHT_1F)
         ) {
-            TitleText(stringResource(R.string.title_filters))
+            TitleText(title)
         }
     }
 }
@@ -455,7 +459,7 @@ fun SalaryField(viewModel: FiltersViewModel) {
                             interactionSource = interactionSource,
                             contentPadding = PaddingValues(ZeroSize),
                             placeholder = { Text(
-                                text = stringResource(R.string.expected_salary),
+                                text = stringResource(R.string.enter_amount),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 style = MaterialTheme.typography.bodyLarge,
                             ) },

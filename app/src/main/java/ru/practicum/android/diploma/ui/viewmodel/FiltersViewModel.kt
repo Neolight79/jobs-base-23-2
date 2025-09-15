@@ -75,11 +75,17 @@ class FiltersViewModel(
     private fun getFiltersState(): FiltersState {
         return FiltersState(
             areFiltersSet = filtersInteractor.isFilterEnabled(),
-            location = currentFilters.area?.name.orEmpty(),
+            location = getCountryAndRegionString(),
             industry = currentFilters.industry?.name.orEmpty(),
             salary = if (currentFilters.salary == null) "" else currentFilters.salary.toString(),
             doNotShowWithoutSalary = currentFilters.onlyWithSalary
         )
+    }
+
+    private fun getCountryAndRegionString(): String {
+        val connector =
+            if (currentFilters.area?.countryId != null && currentFilters.area?.regionId != null) ", " else ""
+        return currentFilters.area?.countryName.orEmpty() + connector + currentFilters.area?.regionName.orEmpty()
     }
 
     private fun saveAndRenderState() {
