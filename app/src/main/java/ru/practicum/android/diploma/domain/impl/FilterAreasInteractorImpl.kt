@@ -29,26 +29,21 @@ class FilterAreasInteractorImpl(
         parentId: Int?,
         query: String?
     ): Pair<List<CountryAndRegion>?, SearchResultStatus> {
-        if (filterAreas.isEmpty()) filterAreas = filterAreasRepository.getFilterAreas().orEmpty()
-        if (filterAreas.isEmpty()) return Pair(null, SearchResultStatus.ServerError)
+        if (filterAreas.isEmpty()) {
+            filterAreas = filterAreasRepository.getFilterAreas().orEmpty()
+        }
+        if (filterAreas.isEmpty()) {
+            return Pair(null, SearchResultStatus.ServerError)
+        }
+
         val areas = mutableListOf<FilterArea>()
         filterAreas.forEach { parent -> parent.areas?.let { areas += it } }
-        val locations = when {
-            parentId != null && !query.isNullOrEmpty() ->
-                mapToLocations(
-                    areas.filter { it.parentId == parentId &&
-                        it.name?.contains(query, ignoreCase = true) == true }
-                )
-            parentId != null && query.isNullOrEmpty() ->
-                mapToLocations(
-                    areas.filter { it.parentId == parentId }
-                )
-            parentId == null && !query.isNullOrEmpty() ->
-                mapToLocations(
-                    areas.filter { it.name?.contains(query, ignoreCase = true) == true }
-                )
-            else -> mapToLocations(areas)
-        }
+
+        val filtered = areas
+            .filter { parentId == null || it.parentId == parentId }
+            .filter { query.isNullOrBlank() || it.name?.contains(query, ignoreCase = true) == true }
+
+        val locations = mapToLocations(filtered)
         return Pair(locations, SearchResultStatus.Success)
     }
 
