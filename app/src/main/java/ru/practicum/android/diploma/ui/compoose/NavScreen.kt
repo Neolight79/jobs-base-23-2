@@ -54,6 +54,7 @@ const val ROUTE_FILTER_LOCATION_REGION = "searchFilterLocationRegion"
 const val ROUTE_FILTER_INDUSTRY = "searchFilterIndustry"
 
 const val JOB_ID = "jobID"
+const val COUNTRY_ID = "countryID"
 
 const val ANIMATION_DELAY = 500
 const val ZERO_DELAY = 0

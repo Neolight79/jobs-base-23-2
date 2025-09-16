@@ -8,8 +8,8 @@ interface NetworkClient {
 
     suspend fun getVacancyById(request: Any?): Response
 
-    suspend fun getAreas(request: Any?): Response
+    suspend fun getAreas(request: Any? = null): Response
 
-    suspend fun getIndustries(request: Any?): Response
+    suspend fun getIndustries(request: Any? = null): Response
 
 }

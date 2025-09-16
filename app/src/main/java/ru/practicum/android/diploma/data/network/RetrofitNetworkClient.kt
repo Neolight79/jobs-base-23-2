@@ -3,6 +3,8 @@ package ru.practicum.android.diploma.data.network
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.practicum.android.diploma.data.dto.FilterAreaResponse
+import ru.practicum.android.diploma.data.dto.FilterIndustryResponse
 import ru.practicum.android.diploma.data.dto.Request
 import ru.practicum.android.diploma.data.dto.Response
 
@@ -45,7 +47,7 @@ class RetrofitNetworkClient(
                     message = it.response()?.message().toString()
                 }
             }
-            if (response.isSuccess) {
+            if (response.isSuccess && response.getOrNull() != null) {
                 response.getOrThrow().apply { resultCode = HTTP_OK_200 }
             } else {
                 Log.e(ERROR_TAG, (errorResponse as Response).message)
@@ -66,8 +68,10 @@ class RetrofitNetworkClient(
                     message = it.response()?.message().toString()
                 }
             }
-            if (response.isSuccess) {
-                response.getOrThrow().apply { resultCode = HTTP_OK_200 }
+            if (response.isSuccess && response.getOrNull() != null) {
+                FilterAreaResponse(response.getOrThrow()).apply {
+                    resultCode = HTTP_OK_200
+                }
             } else {
                 Log.e(ERROR_TAG, (errorResponse as Response).message)
                 errorResponse
@@ -76,23 +80,29 @@ class RetrofitNetworkClient(
     }
 
     override suspend fun getIndustries(request: Any?): Response {
-        var errorResponse = checkRequest(request)
+        val errorResponse = checkRequest(request)
         if (errorResponse != null) return errorResponse
+
         return withContext(Dispatchers.IO) {
-            val response = runCatching {
-                jobsBaseApiService.getIndustries()
-            }.onFailure {
-                errorResponse = Response().apply {
-                    resultCode = (it as retrofit2.HttpException).response()?.code() ?: HTTP_INTERNAL_SERVER_ERROR_500
-                    message = it.response()?.message().toString()
-                }
-            }
-            if (response.isSuccess) {
-                response.getOrThrow().apply { resultCode = HTTP_OK_200 }
-            } else {
-                Log.e(ERROR_TAG, (errorResponse as Response).message)
-                errorResponse
-            }
+            runCatching { jobsBaseApiService.getIndustries() }
+                .fold(
+                    onSuccess = { list ->
+                        FilterIndustryResponse(results = list).apply {
+                            resultCode = HTTP_OK_200
+                        }
+                    },
+                    onFailure = { ex ->
+                        Response().apply {
+                            resultCode = if (ex is retrofit2.HttpException) {
+                                ex.code()
+                            } else {
+                                HTTP_INTERNAL_SERVER_ERROR_500
+                            }
+                            message = ex.localizedMessage ?: UNKNOWN_ERROR
+                            Log.e(ERROR_TAG, message)
+                        }
+                    }
+                )
         }
     }
 
@@ -114,5 +124,6 @@ class RetrofitNetworkClient(
         const val HTTP_INTERNAL_SERVER_ERROR_500 = 500
         const val HTTP_SERVICE_UNAVAILABLE_503 = 503
         const val ERROR_TAG = "Error response message:"
+        const val UNKNOWN_ERROR = "Unknown error"
     }
 }

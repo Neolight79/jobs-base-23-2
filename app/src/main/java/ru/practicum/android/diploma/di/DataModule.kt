@@ -10,6 +10,7 @@ import org.koin.dsl.module
 import ru.practicum.android.diploma.data.AppDatabase
 import ru.practicum.android.diploma.data.FilterParametersSharedStorageImpl
 import ru.practicum.android.diploma.data.SharedStorage
+import ru.practicum.android.diploma.util.mappers.CountryAndRegionMapper
 import ru.practicum.android.diploma.util.mappers.FilterAreaMapper
 import ru.practicum.android.diploma.util.mappers.FilterIndustryMapper
 import ru.practicum.android.diploma.util.mappers.FilterParametersMapper
@@ -46,6 +47,10 @@ val dataModule = module {
     }
 
     single {
+        CountryAndRegionMapper()
+    }
+
+    single {
         FilterIndustryMapper()
     }
 
@@ -56,7 +61,8 @@ val dataModule = module {
     single {
         VacancyMapper(
             filterAreaMapper = get(),
-            filterIndustryMapper = get()
+            filterIndustryMapper = get(),
+            context = androidContext()
         )
     }
 
